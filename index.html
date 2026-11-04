@@ -92,41 +92,43 @@ table.items{width:100%;border-collapse:collapse;font-size:8.5px;table-layout:fix
 .items col.c1{width:14px}.items col.c3{width:52px}
 .items col.c4{width:22px}.items col.c5{width:22px}.items col.c6{width:40px}
 .items col.c7{width:44px}.items col.c8{width:34px}
-.tabbar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;border-top:1px solid var(--host-border);padding:8px 8px 10px;background:var(--host-bg)}
+.tabbar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;border-top:1px solid var(--host-border);padding:8px 8px 10px}
 .tb{border:none;background:transparent;color:var(--host-fg-muted);font:inherit;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;border-radius:12px;cursor:pointer}
 .tb.on{color:var(--host-primary);background:var(--host-muted)}
 .tb svg{width:24px;height:24px}
 @media print{
   html,body{background:#fff!important;margin:0;padding:0}
-  .bar,h1.h,.lead,.tabbar,.pv-head{display:none!important}
+  .bar,h1.h,.lead,.tabbar,.actions,.msg,.copybox,.hint{display:none!important}
+  #v-check>*:not(.preview){display:none!important}
   .app{width:174mm;max-width:none;font-size:10pt;padding:0;min-height:0}
   main{padding:0}
   .preview{background:#fff;padding:0;border-radius:0;overflow:visible}
   .sheet{background:#fff;padding:0;font-size:10pt;line-height:1.5;color:#000}
   .sheet *{color:#000!important;border-color:#000!important}
-  .doc-title{font-size:22pt;letter-spacing:.5em;margin:0 0 3mm}
-  .doc-date{font-size:10pt;margin-bottom:4mm}
-  .client{font-size:14pt;border-bottom:1.2pt solid #000;padding-bottom:2mm;margin-bottom:3mm}
+  .doc-title{font-size:21pt;letter-spacing:.5em;margin:0 0 3mm}
+  .doc-date{font-size:9.5pt;margin-bottom:4mm}
+  .client{font-size:13.5pt;border-bottom:1.2pt solid #000;padding-bottom:2mm;margin-bottom:3mm}
   .honor{font-size:11pt}
-  .co{font-size:9.5pt;line-height:1.7}
-  .co b{font-size:12pt}
-  .seal{width:20mm;height:20mm;border:1.6pt solid #c0392b;font-size:8pt;margin-top:3mm}
+  .co{font-size:9pt;line-height:1.7}
+  .co b{font-size:11.5pt}
+  .seal{width:19mm;height:19mm;border:1.6pt solid #c0392b;font-size:7.5pt;margin-top:2.5mm}
   .seal,.seal *{color:#c0392b!important;border-color:#c0392b!important}
-  .meta th,.meta td{border:.9pt solid #000;padding:1.2mm 2mm;font-size:10pt}
-  .meta th{width:24mm}
-  .leadline{font-size:10pt;margin:2mm 0}
-  .money th,.money td{border:.9pt solid #000;padding:1.5mm}
-  .money .amount{font-size:14pt;width:34mm}
+  .meta th,.meta td{border:.9pt solid #000;padding:1.1mm 2mm;font-size:9.5pt}
+  .meta th{width:23mm}
+  .leadline{font-size:9.5pt;margin:2mm 0}
+  .money th,.money td{border:.9pt solid #000;padding:1.4mm}
+  .money .amount{font-size:13pt;width:33mm}
   .money .en{width:6mm}
   .money .rate{width:11mm;text-align:center}
-  .money .tax{width:20mm}
-  table.items{font-size:9.5pt}
-  .items th,.items td{border:.9pt solid #000;height:7.2mm;padding:.8mm}
-  .items th{height:6.4mm;padding:1.2mm .8mm}
-  .items col.c1{width:7mm}.items col.c3{width:30mm}
-  .items col.c4{width:11mm}.items col.c5{width:11mm}.items col.c6{width:19mm}
-  .items col.c7{width:22mm}.items col.c8{width:17mm}
-  @page{size:A4 portrait;margin:14mm}
+  .money .tax{width:19mm}
+  table.items{font-size:9pt}
+  .items th,.items td{border:.9pt solid #000;height:6.6mm;padding:.7mm}
+  .items th{height:6mm;padding:1mm .7mm}
+  .items col.c1{width:7mm}.items col.c3{width:29mm}
+  .items col.c4{width:11mm}.items col.c5{width:11mm}.items col.c6{width:18mm}
+  .items col.c7{width:21mm}.items col.c8{width:16mm}
+  tr,td,th{page-break-inside:avoid}
+  @page{size:A4 portrait;margin:13mm}
 }
 </style>
 </head>
@@ -173,7 +175,6 @@ table.items{width:100%;border-collapse:collapse;font-size:8.5px;table-layout:fix
         <div style="margin-top:14px"><label>消費税</label>
           <select id="fRate"><option value="10">10％（ふつう）</option><option value="8">8％（たべものなど）</option><option value="0">0％（かけない）</option></select></div>
       </div>
-      <div style="height:6px"></div>
     </section>
 
     <section id="v-check" hidden>
@@ -251,7 +252,7 @@ table.items{width:100%;border-collapse:collapse;font-size:8.5px;table-layout:fix
 </div>
 <script>
 (function(){
-var K='shorui_app_v2', KC=K+'_clients', ROWS=15;
+var K='shorui_app_v3', KC=K+'_clients', ROWS=12;
 function $(id){return document.getElementById(id);}
 function yen(n){return '¥'+Math.round(n).toLocaleString('ja-JP');}
 function num(v){var n=parseFloat(String(v).replace(/[^0-9.-]/g,''));return isNaN(n)?0:n;}
@@ -387,7 +388,7 @@ $('itemList').addEventListener('click',function(e){
   renderItems();render();
 });
 $('addItem').addEventListener('click',function(){
-  if(state.items.length>=ROWS){msg('15行までです');return;}
+  if(state.items.length>=ROWS){msg(ROWS+'行までです');return;}
   state.items.push({name:'',mat:'',qty:'1',unit:'式',price:'',note:''});
   renderItems();render();
 });
