@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="書類アプリ">
+<meta name="theme-color" content="#2563eb">
+<title>書類アプリ</title>
+<style>
+:root{--host-bg:#fff;--host-fg:#111827;--host-fg-muted:#6b7280;--host-card:#fff;--host-input:#f9fafb;--host-muted:#f3f4f6;--host-border:#d1d5db;--host-primary:#2563eb;--host-secondary:#eef2ff;--host-secondary-fg:#1e3a8a;--host-success:#16a34a}
+@media(prefers-color-scheme:dark){:root{--host-bg:#0f1115;--host-fg:#e5e7eb;--host-fg-muted:#9ca3af;--host-card:#171a21;--host-input:#1d2129;--host-muted:#22262f;--host-border:#343a46;--host-primary:#3b82f6;--host-secondary:#22262f;--host-secondary-fg:#cbd5e1}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+.app{width:392px;max-width:100%;margin:0 auto;font-family:Inter,system-ui,-apple-system,"Hiragino Sans",sans-serif;color:var(--host-fg);font-size:18px;line-height:1.6;background:var(--host-bg);min-height:100vh;padding-bottom:8px}
+.bar{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;border-bottom:1px solid var(--host-border)}
+.logo{width:34px;height:34px;border-radius:9px;background:var(--host-primary);display:flex;align-items:center;justify-content:center;flex:none}
+.bar-t{font-size:18px;font-weight:500}
+main{padding:14px 12px 10px}
+h1.h{font-size:22px;font-weight:500;margin:0 0 4px}
+.lead{font-size:15px;color:var(--host-fg-muted);margin:0 0 14px;line-height:1.5}
+.step{background:var(--host-card);border:1px solid var(--host-border);border-radius:16px;padding:16px;margin-bottom:12px}
+.step-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.num{flex:none;width:32px;height:32px;border-radius:50%;background:var(--host-primary);color:#fff;font-size:16px;font-weight:500;display:flex;align-items:center;justify-content:center}
+.step-t{font-size:18px;font-weight:500;line-height:1.3}
+.step-s{font-size:13px;color:var(--host-fg-muted);margin:2px 0 0;line-height:1.4}
+label{display:block;font-size:15px;color:var(--host-fg-muted);margin:0 0 6px}
+input,select,textarea{width:100%;background:var(--host-input);color:var(--host-fg);border:2px solid var(--host-border);border-radius:12px;padding:14px;font:inherit;font-size:19px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--host-primary)}
+.mb{margin-bottom:14px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 84px 96px 46px;gap:8px;align-items:end}
+.lbl{font-size:13px;color:var(--host-fg-muted);margin-bottom:4px;display:block}
+.itembox{border:1px solid var(--host-border);border-radius:12px;padding:12px;margin-bottom:12px}
+.itembox .cap{font-size:13px;color:var(--host-fg-muted);margin-bottom:8px}
+.delbig{height:58px;border:2px solid var(--host-border);background:transparent;color:var(--host-fg-muted);border-radius:12px;font-size:25px;line-height:1;cursor:pointer}
+.addbig{width:100%;height:56px;border:2px dashed var(--host-border);background:transparent;color:var(--host-fg);border-radius:12px;font:inherit;font-size:17px;cursor:pointer}
+.totalbox{background:var(--host-muted);border-radius:14px;padding:14px 16px;margin-top:6px}
+.trow{display:flex;justify-content:space-between;font-size:16px;color:var(--host-fg-muted);padding:4px 0}
+.trow.big{font-size:20px;color:var(--host-fg);font-weight:500;border-top:1px solid var(--host-border);margin-top:6px;padding-top:10px}
+.trow.big b{font-size:29px}
+.actions{display:grid;gap:10px;margin:14px 0 6px}
+.btn{border:none;border-radius:16px;font:inherit;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
+.btn-copy{height:72px;font-size:23px;background:var(--host-primary);color:#fff}
+.btn-print{height:72px;font-size:23px;background:var(--host-secondary);color:var(--host-secondary-fg);border:2px solid var(--host-border)}
+.btn-save{height:84px;font-size:22px;background:var(--host-primary);color:#fff;width:100%;margin-bottom:10px}
+.btn-small{min-height:54px;font-size:16px;background:var(--host-secondary);color:var(--host-secondary-fg);border:2px solid var(--host-border);width:100%;border-radius:12px;cursor:pointer;font:inherit;padding:10px}
+.msg{border-radius:14px;padding:14px;font-size:17px;font-weight:500;text-align:center;margin-top:10px;display:none;line-height:1.5}
+.msg.ok{display:block;background:var(--host-success);color:#fff}
+.copybox{display:none;margin-top:10px}
+.copybox.show{display:block}
+.copybox textarea{min-height:200px;font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.6}
+.hint{font-size:14px;color:var(--host-fg-muted);text-align:center;margin:6px 0 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{border:2px solid var(--host-border);background:transparent;color:var(--host-fg);border-radius:999px;padding:8px 14px;font:inherit;font-size:15px;cursor:pointer}
+.ownbox{background:var(--host-muted);border-radius:12px;padding:12px 14px;font-size:15px;color:var(--host-fg-muted);word-break:break-word}
+.cli{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--host-border);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.cli .nm{font-size:17px;word-break:break-word}
+.mini{flex:none;border:2px solid var(--host-border);background:transparent;color:var(--host-fg);border-radius:10px;font:inherit;font-size:14px;padding:8px 12px;cursor:pointer}
+.empty{font-size:15px;color:var(--host-fg-muted);text-align:center;padding:26px 0}
+.preview{background:var(--host-muted);border-radius:14px;padding:8px;overflow:hidden}
+.sheet{background:var(--host-card);padding:12px 10px;font-size:9.5px;line-height:1.45;color:var(--host-fg)}
+.doc-title{font-size:20px;font-weight:500;letter-spacing:.35em;text-align:center;margin-bottom:6px}
+.doc-date{text-align:right;font-size:10px;margin-bottom:8px}
+.head{display:flex;gap:8px;justify-content:space-between;margin-bottom:6px}
+.head .left{flex:1;min-width:0}
+.head .right{width:47%}
+.client{font-size:13px;font-weight:500;border-bottom:1px solid var(--host-fg);padding-bottom:3px;margin-bottom:6px;word-break:break-word}
+.honor{font-size:11px;font-weight:400}
+.co{font-size:9px;line-height:1.5;word-break:break-word}
+.co b{font-size:11px;font-weight:500}
+.seal{width:44px;height:44px;border:2px solid #c0392b;border-radius:2px;color:#c0392b;display:flex;align-items:center;justify-content:center;font-size:7px;line-height:1.1;text-align:center;margin-top:4px;padding:2px;writing-mode:vertical-rl;letter-spacing:.05em}
+.meta{width:100%;border-collapse:collapse;font-size:9.5px;margin-bottom:6px}
+.meta th{border:1px solid var(--host-fg);font-weight:400;padding:2px 4px;text-align:left;width:42px}
+.meta td{border:1px solid var(--host-fg);padding:2px 4px;word-break:break-word}
+.leadline{font-size:9.5px;margin:4px 0}
+table.money{width:100%;border-collapse:collapse;font-size:9.5px}
+.money th,.money td{border:1px solid var(--host-fg);padding:3px 4px;text-align:left}
+.money th{font-weight:400}
+.money .amount{text-align:right;font-size:13px;font-weight:500;width:78px}
+.money .en{width:14px;text-align:center}
+.money .rate{width:26px;text-align:center}
+.money .tax{width:44px}
+.money td.val{text-align:right}
+table.items{width:100%;border-collapse:collapse;font-size:8.5px;table-layout:fixed}
+.items th,.items td{border:1px solid var(--host-fg);padding:2px;height:16px;word-break:break-word;vertical-align:top}
+.items th{font-weight:400;text-align:center;height:auto}
+.items td{text-align:center}
+.items td.n{text-align:right}
+.items td.nm{text-align:left}
+.items .sub-lbl{text-align:center;font-weight:500}
+.items col.c1{width:14px}.items col.c3{width:52px}
+.items col.c4{width:22px}.items col.c5{width:22px}.items col.c6{width:40px}
+.items col.c7{width:44px}.items col.c8{width:34px}
+.tabbar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;border-top:1px solid var(--host-border);padding:8px 8px 10px;background:var(--host-bg)}
+.tb{border:none;background:transparent;color:var(--host-fg-muted);font:inherit;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;border-radius:12px;cursor:pointer}
+.tb.on{color:var(--host-primary);background:var(--host-muted)}
+.tb svg{width:24px;height:24px}
+.guide{background:var(--host-muted);border-radius:14px;padding:14px;font-size:15px;line-height:1.7;margin-top:12px}
+.guide ol{margin:6px 0 0;padding-left:20px}
+.guide li{margin-bottom:6px}
+@media print{
+  html,body{background:#fff!important;margin:0;padding:0}
+  .no-print{display:none!important}
+  .app{width:174mm;max-width:none;font-size:10pt;padding:0;min-height:0}
+  main{padding:0}
+  .preview{background:#fff;padding:0;border-radius:0;overflow:visible}
+  .sheet{background:#fff;padding:0;font-size:10pt;line-height:1.5;color:#000}
+  .sheet *{color:#000!important;border-color:#000!important}
+  .doc-title{font-size:22pt;letter-spacing:.5em;margin:0 0 4mm}
+  .doc-date{font-size:10pt;margin-bottom:6mm}
+  .client{font-size:14pt;border-bottom:1.2pt solid #000;padding-bottom:2mm;margin-bottom:4mm}
+  .honor{font-size:11pt}
+  .co{font-size:9.5pt;line-height:1.7}
+  .co b{font-size:12pt}
+  .seal{width:20mm;height:20mm;border:1.6pt solid #c0392b;font-size:8pt;margin-top:3mm}
+  .seal,.seal *{color:#c0392b!important;border-color:#c0392b!important}
+  .meta th,.meta td{border:.9pt solid #000;padding:1.5mm 2mm;font-size:10pt}
+  .meta th{width:24mm}
+  .leadline{font-size:10pt;margin:3mm 0}
+  .money th,.money td{border:.9pt solid #000;padding:2mm}
+  .money .amount{font-size:14pt;width:34mm}
+  .money .en{width:6mm}
+  .money .rate{width:11mm;text-align:center}
+  .money .tax{width:20mm}
+  table.items{font-size:9.5pt}
+  .items th,.items td{border:.9pt solid #000;height:8.2mm;padding:1mm}
+  .items th{height:7mm;padding:1.5mm 1mm}
+  .items col.c1{width:7mm}.items col.c3{width:30mm}
+  .items col.c4{width:11mm}.items col.c5{width:11mm}.items col.c6{width:19mm}
+  .items col.c7{width:22mm}.items col.c8{width:17mm}
+  @page{size:A4 portrait;margin:16mm}
+}
+</style>
+</head>
+<body>
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">見積書と請求書を作るアプリ</h2>
+<div id="root">
+<div class="app">
+  <div class="bar">
+    <div class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 11h6M9 15h6"/></svg></div>
+    <div class="bar-t">書類アプリ</div>
+  </div>
+  <main>
+    <section id="v-new">
+      <h1 class="h">書類をつくる</h1>
+      <p class="lead">相手の名前を入れて、品物を入れて、最後に印刷です。自分の会社は自動で入ります。</p>
+      <div class="step">
+        <div class="step-head"><div class="num">1</div><div><div class="step-t">相手の名前</div><div class="step-s">名前を入れるだけ</div></div></div>
+        <input id="fClient" placeholder="（株）◯◯" autocomplete="organization">
+        <div class="mb" style="margin-top:14px"><label>敬称</label>
+          <select id="fHonor"><option value="様">様</option><option value="御中">御中</option></select></div>
+        <div class="chips" id="chips"></div>
+      </div>
+      <div class="step">
+        <div class="step-head"><div class="num">2</div><div><div class="step-t">書類の種類と日付</div></div></div>
+        <div class="row2">
+          <div><label>種類</label>
+            <select id="fKind"><option value="見積">御見積書</option><option value="請求">御請求書</option><option value="納品">御納品書</option></select></div>
+          <div><label>日付</label><input id="fDate" type="date"></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head"><div class="num">3</div><div><div class="step-t">工事名と場所</div></div></div>
+        <div class="mb"><label>工事名</label><input id="fWork" placeholder="例：集合所便所取換工事"></div>
+        <div><label>工事場所</label><input id="fPlace" placeholder="例：江戸川区◯◯"></div>
+      </div>
+      <div class="step">
+        <div class="step-head"><div class="num">4</div><div><div class="step-t">品物と金額</div><div class="step-s">数量と、1つの値段を入れる</div></div></div>
+        <div id="itemList"></div>
+        <button class="addbig" id="addItem">＋ 行をふやす</button>
+        <div class="totalbox">
+          <div class="trow"><span>小計</span><span id="tSub">¥0</span></div>
+          <div class="trow"><span>消費税（<span id="tRateLbl">10</span>%）</span><span id="tTax">¥0</span></div>
+          <div class="trow big"><span>税込合計</span><b id="tGrand">¥0</b></div>
+        </div>
+        <div style="margin-top:14px"><label>消費税</label>
+          <select id="fRate"><option value="10">10％（ふつう）</option><option value="8">8％（たべものなど）</option><option value="0">0％（かけない）</option></select></div>
+      </div>
+    </section>
+
+    <section id="v-check" hidden>
+      <h1 class="h">できあがり</h1>
+      <p class="lead">A4たて1枚で印刷されます。確認してから押してください。</p>
+      <div class="preview">
+        <div class="sheet">
+          <div class="doc-title" id="sTitle">御見積書</div>
+          <div class="doc-date" id="sDate"></div>
+          <div class="head">
+            <div class="left">
+              <div class="client"><span id="sClient">（宛先）</span><span class="honor" id="sHonor">　様</span></div>
+              <table class="meta"><tr><th>工事名</th><td id="sWork"></td></tr><tr><th>工事場所</th><td id="sPlace"></td></tr></table>
+            </div>
+            <div class="right"><div class="co" id="sFrom"></div><div class="seal" id="seal">印</div></div>
+          </div>
+          <div class="leadline" id="sLead">下記の通り御見積申し上げます</div>
+          <table class="money"><tr>
+            <th>税込合計金額</th><td class="amount" id="sTotal">¥0</td><td class="en">円</td>
+            <th class="rate">税率</th><td class="val" id="sRate">10%</td>
+            <th class="tax">消費税額等</th><td class="val" id="sTax">0</td>
+          </tr></table>
+          <table class="items">
+            <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"><col class="c6"><col class="c7"><col class="c8"></colgroup>
+            <thead><tr><th>No</th><th>名称</th><th>材質・寸法</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>摘要</th></tr></thead>
+            <tbody id="sRows"></tbody>
+            <tfoot><tr><td></td><td class="sub-lbl">小計</td><td></td><td></td><td></td><td></td><td class="n" id="sSub">0</td><td></td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-print" id="printBtn">印刷する（FAX）</button>
+        <button class="btn btn-copy" id="copyBtn">コピーする</button>
+      </div>
+      <div class="msg" id="msg"></div>
+      <div class="copybox" id="copyBox">
+        <p class="hint" style="text-align:left;margin-bottom:8px">この文を長押しして「コピー」でもかまいません</p>
+        <textarea id="copyText" readonly></textarea>
+      </div>
+    </section>
+
+    <section id="v-clients" hidden>
+      <h1 class="h">相手の名前</h1>
+      <p class="lead">よく使う相手を登録しておくと、押すだけで入ります。</p>
+      <div class="step">
+        <div class="mb"><label>相手の名前を登録</label><input id="fNewClient" placeholder="（株）◯◯"></div>
+        <button class="btn-small" id="addClient">登録する</button>
+      </div>
+      <div id="cliList"></div>
+    </section>
+
+    <section id="v-set" hidden>
+      <h1 class="h">設定</h1>
+      <p class="lead">自分の会社を登録すると、毎回自動で入ります。</p>
+      <div class="step">
+        <div class="step-head"><div class="num">設</div><div><div class="step-t">自分の会社</div><div class="step-s">1回入れるだけで済みます</div></div></div>
+        <div id="ownView"></div>
+        <div id="fromFields" style="display:none">
+          <div class="mb"><label>会社名</label><input id="fFromName" placeholder="例：宇田川電気商会"></div>
+          <div class="mb"><label>住所</label><input id="fFromAddr" placeholder="例：東京都江戸川区中央2丁目33番1号"></div>
+          <div class="mb"><label>電話番号</label><input id="fFromTel" inputmode="tel" placeholder="例：03-0000-0000"></div>
+          <div class="mb"><label>FAX番号</label><input id="fFromFax" inputmode="tel" placeholder="例：03-0000-0000"></div>
+          <div><label>登録番号</label><input id="fFromReg" placeholder="例：T3-8100-1616-1527"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <nav class="tabbar">
+    <button class="tb on" data-v="v-new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20h16"/><path d="M14.5 4.5l4 4L9 18l-5 1 1-5z"/></svg>入力</button>
+    <button class="tb" data-v="v-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h6M9 16h4"/></svg>確認</button>
+    <button class="tb" data-v="v-clients"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3-6 7-6s7 2.4 7 6"/></svg>相手</button>
+    <button class="tb" data-v="v-set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/></svg>設定</button>
+  </nav>
+</div>
+</div>
+<script>
+(function(){
+var K='shorui_app_v1', KC=K+'_clients', ROWS=15;
+function $(id){return document.getElementById(id);}
+function yen(n){return '¥'+Math.round(n).toLocaleString('ja-JP');}
+function num(v){var n=parseFloat(String(v).replace(/[^0-9.-]/g,''));return isNaN(n)?0:n;}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+function iso(d){return d.toISOString().slice(0,10);}
+function era(v){if(!v)return '';var d=new Date(v+'T00:00:00');return '令和 '+(d.getFullYear()-2018)+' 年 '+(d.getMonth()+1)+' 月 '+d.getDate()+' 日';}
+var state={kind:'見積',date:iso(new Date()),client:'',honor:'様',work:'',place:'',rate:'10',items:[{name:'',mat:'',qty:'1',unit:'式',price:'',note:''}]};
+var own=null; try{own=JSON.parse(localStorage.getItem(K)||'null');}catch(e){own=null;}
+function ownPaint(){
+  var v=$('ownView');
+  if(own&&own.name){
+    v.innerHTML='<div class="ownbox">'+esc(own.name)+(own.tel?'　電話 '+esc(own.tel):'')+'</div>';
+    var b=document.createElement('button'); b.className='btn-small'; b.textContent='会社の情報を変更する'; b.style.margin='10px 0';
+    b.onclick=function(){$('fromFields').style.display='block';};
+    v.appendChild(b);
+  } else {
+    v.innerHTML='<div class="ownbox" style="margin-bottom:10px">まだ登録されていません。下の欄に1回だけ入れてください。</div>';
+    $('fromFields').style.display='block';
+  }
+}
+function ownLoad(){
+  if(own){$('fFromName').value=own.name||'';$('fFromAddr').value=own.addr||'';$('fFromTel').value=own.tel||'';$('fFromFax').value=own.fax||'';$('fFromReg').value=own.reg||'';}
+  ownPaint();
+}
+function saveOwn(){
+  own={name:$('fFromName').value,addr:$('fFromAddr').value,tel:$('fFromTel').value,fax:$('fFromFax').value,reg:$('fFromReg').value};
+  try{localStorage.setItem(K,JSON.stringify(own));}catch(e){}
+  ownPaint();
+}
+['fFromName','fFromAddr','fFromTel','fFromFax','fFromReg'].forEach(function(id){$(id).addEventListener('blur',saveOwn);});
+function clients(){try{return JSON.parse(localStorage.getItem(KC)||'[]');}catch(e){return [];}}
+function setClients(a){try{localStorage.setItem(KC,JSON.stringify(a));}catch(e){}paintClients();paintChips();}
+function paintChips(){
+  var box=$('chips');box.innerHTML='';
+  clients().slice(0,5).forEach(function(n){
+    var b=document.createElement('button');b.className='chip';b.type='button';b.textContent=n;
+    b.onclick=function(){state.client=n;$('fClient').value=n;render();};
+    box.appendChild(b);
+  });
+}
+function paintClients(){
+  var box=$('cliList');box.innerHTML='';
+  var list=clients();
+  if(!list.length){box.innerHTML='<div class="empty">まだ登録がありません</div>';return;}
+  list.forEach(function(n){
+    var d=document.createElement('div');d.className='cli';
+    d.innerHTML='<div class="nm">'+esc(n)+'</div>';
+    var u=document.createElement('button');u.className='mini';u.textContent='使う';
+    u.onclick=function(){state.client=n;$('fClient').value=n;render();go('v-new');};
+    var x=document.createElement('button');x.className='mini';x.textContent='削除';
+    x.onclick=function(){setClients(clients().filter(function(v){return v!==n;}));};
+    var w=document.createElement('div');w.style.display='flex';w.style.gap='6px';
+    w.appendChild(u);w.appendChild(x);d.appendChild(w);
+    box.appendChild(d);
+  });
+}
+$('addClient').addEventListener('click',function(){
+  var n=$('fNewClient').value.trim();if(!n)return;
+  var a=clients().filter(function(v){return v!==n;});a.unshift(n);setClients(a);
+  $('fNewClient').value='';msg('登録しました');
+});
+function pushClient(name){
+  if(!name)return;
+  var a=clients().filter(function(v){return v!==name;});a.unshift(name);setClients(a.slice(0,20));
+}
+function renderItems(){
+  var box=$('itemList');box.innerHTML='';
+  state.items.forEach(function(it,i){
+    var d=document.createElement('div');d.className='itembox';
+    d.innerHTML='<div class="cap">'+(i+1)+'行目</div>'
+      +'<div class="mb"><label>品物の名前</label><input data-i="'+i+'" data-f="name" placeholder="例：便所換気扇工事" value="'+esc(it.name)+'"></div>'
+      +'<div class="mb"><label>材質・寸法（なくてよい）</label><input data-i="'+i+'" data-f="mat" placeholder="例：100φシロッコファン" value="'+esc(it.mat)+'"></div>'
+      +'<div class="row3"><div><span class="lbl">数量</span><input data-i="'+i+'" data-f="qty" inputmode="numeric" value="'+esc(it.qty)+'"></div>'
+      +'<div><span class="lbl">単位</span><input data-i="'+i+'" data-f="unit" value="'+esc(it.unit)+'"></div>'
+      +'<div><span class="lbl">1つの値段</span><input data-i="'+i+'" data-f="price" inputmode="numeric" placeholder="0" value="'+esc(it.price)+'"></div>'
+      +'<button class="delbig" data-del="'+i+'" aria-label="けす">×</button></div>'
+      +'<div style="margin-top:12px"><label>摘要（なくてよい）</label><input data-i="'+i+'" data-f="note" placeholder="例：型" value="'+esc(it.note)+'"></div>';
+    box.appendChild(d);
+  });
+}
+function calc(){
+  var sub=state.items.reduce(function(a,it){return a+num(it.qty)*num(it.price);},0);
+  var tax=Math.floor(sub*(num(state.rate)/100));
+  return {sub:sub,tax:tax,grand:sub+tax};
+}
+function render(){
+  var c=calc();
+  $('tSub').textContent=yen(c.sub);$('tTax').textContent=yen(c.tax);$('tGrand').textContent=yen(c.grand);
+  $('tRateLbl').textContent=state.rate;
+  $('sTitle').textContent='御'+state.kind+'書';
+  $('sLead').textContent='下記の通り御'+state.kind+'申し上げます';
+  $('sDate').textContent=era(state.date);
+  $('sClient').textContent=state.client||'（宛先）';
+  $('sHonor').textContent='　'+state.honor;
+  $('sWork').textContent=state.work||'';$('sPlace').textContent=state.place||'';
+  $('sTotal').textContent=yen(c.grand);
+  $('sRate').textContent=state.rate+'%';
+  $('sTax').textContent=Math.round(c.tax).toLocaleString('ja-JP');
+  $('sSub').textContent=Math.round(c.sub).toLocaleString('ja-JP');
+  var rows=$('sRows');rows.innerHTML='';
+  var list=state.items.filter(function(it){return it.name||num(it.price);});
+  for(var i=0;i<ROWS;i++){
+    var it=list[i];var tr=document.createElement('tr');
+    if(it){
+      tr.innerHTML='<td>'+(i+1)+'</td><td class="nm">'+esc(it.name)+'</td><td>'+esc(it.mat)+'</td><td>'+esc(it.qty)+'</td><td>'+esc(it.unit)+'</td>'
+        +'<td class="n">'+(num(it.price)?Math.round(num(it.price)).toLocaleString('ja-JP'):'')+'</td>'
+        +'<td class="n">'+(num(it.price)?Math.round(num(it.qty)*num(it.price)).toLocaleString('ja-JP'):'')+'</td>'
+        +'<td>'+esc(it.note)+'</td>';
+    } else {tr.innerHTML='<td>'+(i+1)+'</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>';}
+    rows.appendChild(tr);
+  }
+  var n=$('fFromName').value,a=$('fFromAddr').value,t=$('fFromTel').value,f=$('fFromFax').value,r=$('fFromReg').value;
+  var p=[];if(n)p.push('<b>'+esc(n)+'</b>');if(a)p.push(esc(a));
+  if(t)p.push('電話　'+esc(t));if(f)p.push('FAX　'+esc(f));if(r)p.push(esc(r));
+  $('sFrom').innerHTML=p.join('<br>');
+  $('seal').textContent=n?n.replace(/[\s（）()]/g,'').slice(0,6):'印';
+}
+['fKind','fDate','fClient','fHonor','fWork','fPlace','fRate'].forEach(function(id){
+  $(id).addEventListener('input',function(e){
+    var k={fKind:'kind',fDate:'date',fClient:'client',fHonor:'honor',fWork:'work',fPlace:'place',fRate:'rate'}[id];
+    state[k]=e.target.value;render();
+  });
+});
+['fFromName','fFromAddr','fFromTel','fFromFax','fFromReg'].forEach(function(id){$(id).addEventListener('input',render);});
+$('itemList').addEventListener('input',function(e){
+  var i=e.target.dataset.i,f=e.target.dataset.f;if(i===undefined)return;
+  state.items[+i][f]=e.target.value;render();
+});
+$('itemList').addEventListener('click',function(e){
+  var i=e.target.dataset.del;if(i===undefined)return;
+  state.items.splice(+i,1);
+  if(!state.items.length)state.items.push({name:'',mat:'',qty:'1',unit:'式',price:'',note:''});
+  renderItems();render();
+});
+$('addItem').addEventListener('click',function(){
+  if(state.items.length>=ROWS){msg('15行までです');return;}
+  state.items.push({name:'',mat:'',qty:'1',unit:'式',price:'',note:''});
+  renderItems();render();
+});
+function buildText(){
+  var c=calc();
+  var L=['御'+state.kind+'書',era(state.date),'',(state.client||'')+'　'+state.honor,''];
+  if(state.work)L.push('工事名：'+state.work);
+  if(state.place)L.push('工事場所：'+state.place);
+  L.push('下記の通り御'+state.kind+'申し上げます','');
+  L.push('税込合計金額 '+yen(c.grand)+' 円（税率'+state.rate+'％ 消費税額等 '+yen(c.tax)+'）','');
+  state.items.filter(function(it){return it.name||num(it.price);}).forEach(function(it,i){
+    L.push((i+1)+'. '+it.name+(it.mat?' / '+it.mat:'')+'  '+it.qty+it.unit+' × '+yen(num(it.price))+' = '+yen(num(it.qty)*num(it.price))+(it.note?'（'+it.note+'）':''));
+  });
+  L.push('小計 '+yen(c.sub),'');
+  var n=$('fFromName').value,a=$('fFromAddr').value,t=$('fFromTel').value,f=$('fFromFax').value,r=$('fFromReg').value;
+  if(n){L.push('---');L.push(n);if(a)L.push(a);if(t)L.push('電話 '+t);if(f)L.push('FAX '+f);if(r)L.push(r);}
+  return L.join('\n');
+}
+var msgT;
+function msg(t,where){
+  var m=$(where||'msg');m.className='msg ok';m.textContent=t;
+  clearTimeout(msgT);msgT=setTimeout(function(){m.className='msg';},6000);
+}
+$('copyBtn').addEventListener('click',function(){
+  if(!state.client){msg('「相手」の画面で名前を入れてください');return;}
+  var text=buildText();
+  $('copyText').value=text;$('copyBox').classList.add('show');
+  saveOwn();pushClient(state.client);
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){msg('コピーしました');},function(){$('copyText').select();msg('下の文を長押ししてコピーしてください');});
+  } else {$('copyText').select();msg('下の文を長押ししてコピーしてください');}
+});
+$('printBtn').addEventListener('click',function(){
+  if(!state.client){msg('「相手」の画面で名前を入れてください');return;}
+  saveOwn();pushClient(state.client);window.print();
+});
+function go(id){
+  ['v-new','v-check','v-clients','v-set'].forEach(function(v){$(v).hidden=(v!==id);});
+  var tbs=document.querySelectorAll('.tb');
+  for(var i=0;i<tbs.length;i++)tbs[i].classList.toggle('on',tbs[i].dataset.v===id);
+  window.scrollTo(0,0);
+}
+var tbs=document.querySelectorAll('.tb');
+for(var j=0;j<tbs.length;j++){tbs[j].addEventListener('click',function(){go(this.dataset.v);});}
+$('fDate').value=state.date;
+renderItems();ownLoad();paintClients();paintChips();render();
+})();
+</script>
+</body>
+</html>
