@@ -58,6 +58,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--host-primary)}
 .cli .nm{font-size:17px;word-break:break-word}
 .mini{flex:none;border:2px solid var(--host-border);background:transparent;color:var(--host-fg);border-radius:10px;font:inherit;font-size:14px;padding:8px 12px;cursor:pointer}
 .empty{font-size:15px;color:var(--host-fg-muted);text-align:center;padding:26px 0}
+.savemark{font-size:14px;color:var(--host-success);margin-top:8px;min-height:20px}
 .preview{background:var(--host-muted);border-radius:14px;padding:8px;overflow:hidden}
 .sheet{background:var(--host-card);padding:12px 10px;font-size:9.5px;line-height:1.45;color:var(--host-fg)}
 .doc-title{font-size:20px;font-weight:500;letter-spacing:.35em;text-align:center;margin-bottom:6px}
@@ -100,33 +101,33 @@ table.items{width:100%;border-collapse:collapse;font-size:8.5px;table-layout:fix
   html,body{background:#fff!important;margin:0;padding:0}
   .bar,h1.h,.lead,.tabbar,.actions,.msg,.copybox,.hint{display:none!important}
   #v-check>*:not(.preview){display:none!important}
-  .app{width:174mm;max-width:none;font-size:10pt;padding:0;min-height:0}
+  .app{width:174mm;max-width:none;font-size:12pt;padding:0;min-height:0}
   main{padding:0}
   .preview{background:#fff;padding:0;border-radius:0;overflow:visible}
-  .sheet{background:#fff;padding:0;font-size:10pt;line-height:1.5;color:#000}
+  .sheet{background:#fff;padding:0;font-size:12pt;line-height:1.6;color:#000}
   .sheet *{color:#000!important;border-color:#000!important}
-  .doc-title{font-size:21pt;letter-spacing:.5em;margin:0 0 3mm}
-  .doc-date{font-size:9.5pt;margin-bottom:4mm}
-  .client{font-size:13.5pt;border-bottom:1.2pt solid #000;padding-bottom:2mm;margin-bottom:3mm}
-  .honor{font-size:11pt}
-  .co{font-size:9pt;line-height:1.7}
-  .co b{font-size:11.5pt}
-  .seal{width:19mm;height:19mm;border:1.6pt solid #c0392b;font-size:7.5pt;margin-top:2.5mm}
+  .doc-title{font-size:28pt;letter-spacing:.5em;margin:0 0 5mm}
+  .doc-date{font-size:12pt;margin-bottom:6mm}
+  .client{font-size:18pt;border-bottom:1.4pt solid #000;padding-bottom:3mm;margin-bottom:4mm}
+  .honor{font-size:13pt}
+  .co{font-size:10.5pt;line-height:1.8}
+  .co b{font-size:13pt}
+  .seal{width:24mm;height:24mm;border:1.8pt solid #c0392b;font-size:9pt;margin-top:3mm}
   .seal,.seal *{color:#c0392b!important;border-color:#c0392b!important}
-  .meta th,.meta td{border:.9pt solid #000;padding:1.1mm 2mm;font-size:9.5pt}
-  .meta th{width:23mm}
-  .leadline{font-size:9.5pt;margin:2mm 0}
-  .money th,.money td{border:.9pt solid #000;padding:1.4mm}
-  .money .amount{font-size:13pt;width:33mm}
-  .money .en{width:6mm}
-  .money .rate{width:11mm;text-align:center}
-  .money .tax{width:19mm}
-  table.items{font-size:9pt}
-  .items th,.items td{border:.9pt solid #000;height:6.6mm;padding:.7mm}
-  .items th{height:6mm;padding:1mm .7mm}
-  .items col.c1{width:7mm}.items col.c3{width:29mm}
-  .items col.c4{width:11mm}.items col.c5{width:11mm}.items col.c6{width:18mm}
-  .items col.c7{width:21mm}.items col.c8{width:16mm}
+  .meta th,.meta td{border:1pt solid #000;padding:1.8mm 2mm;font-size:11pt}
+  .meta th{width:26mm}
+  .leadline{font-size:11.5pt;margin:3mm 0}
+  .money th,.money td{border:1pt solid #000;padding:2mm;font-size:11pt}
+  .money .amount{font-size:18pt;width:38mm}
+  .money .en{width:7mm}
+  .money .rate{width:12mm;text-align:center}
+  .money .tax{width:21mm}
+  table.items{font-size:11pt}
+  .items th,.items td{border:1pt solid #000;height:9mm;padding:1mm}
+  .items th{height:8mm;padding:1.2mm 1mm}
+  .items col.c1{width:8mm}.items col.c3{width:32mm}
+  .items col.c4{width:12mm}.items col.c5{width:12mm}.items col.c6{width:20mm}
+  .items col.c7{width:24mm}.items col.c8{width:18mm}
   tr,td,th{page-break-inside:avoid}
   @page{size:A4 portrait;margin:13mm}
 }
@@ -228,7 +229,7 @@ table.items{width:100%;border-collapse:collapse;font-size:8.5px;table-layout:fix
 
     <section id="v-set" hidden>
       <h1 class="h">設定</h1>
-      <p class="lead">自分の会社を登録すると、毎回自動で入ります。</p>
+      <p class="lead">自分の会社を一度入れると、次からも自動で入ります。</p>
       <div class="step">
         <div class="step-head"><div class="num">設</div><div><div class="step-t">自分の会社</div><div class="step-s">1回入れるだけで済みます</div></div></div>
         <div id="ownView"></div>
@@ -238,6 +239,7 @@ table.items{width:100%;border-collapse:collapse;font-size:8.5px;table-layout:fix
           <div class="mb"><label>電話番号</label><input id="fFromTel" inputmode="tel" placeholder="例：03-0000-0000"></div>
           <div class="mb"><label>FAX番号</label><input id="fFromFax" inputmode="tel" placeholder="例：03-0000-0000"></div>
           <div><label>登録番号</label><input id="fFromReg" placeholder="例：T3-8100-1616-1527"></div>
+          <div class="savemark" id="saveMark"></div>
         </div>
       </div>
     </section>
@@ -252,7 +254,8 @@ table.items{width:100%;border-collapse:collapse;font-size:8.5px;table-layout:fix
 </div>
 <script>
 (function(){
-var K='shorui_app_v3', KC=K+'_clients', ROWS=12;
+var K='shorui_app', KC='shorui_app_clients', ROWS=15;
+var OLD=['shorui_app_v4','shorui_app_v3','shorui_app_v2','shorui_app_v1','ojisan_mitumori_v14','ojisan_mitumori_v13','ojisan_mitumori_v12'];
 function $(id){return document.getElementById(id);}
 function yen(n){return '¥'+Math.round(n).toLocaleString('ja-JP');}
 function num(v){var n=parseFloat(String(v).replace(/[^0-9.-]/g,''));return isNaN(n)?0:n;}
@@ -260,7 +263,14 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;'
 function iso(d){return d.toISOString().slice(0,10);}
 function era(v){if(!v)return '';var d=new Date(v+'T00:00:00');return '令和 '+(d.getFullYear()-2018)+' 年 '+(d.getMonth()+1)+' 月 '+d.getDate()+' 日';}
 var state={kind:'見積',date:iso(new Date()),client:'',honor:'様',work:'',place:'',rate:'10',items:[{name:'',mat:'',qty:'1',unit:'式',price:'',note:''}]};
-var own=null; try{own=JSON.parse(localStorage.getItem(K)||'null');}catch(e){own=null;}
+function readOwn(){
+  var list=[K].concat(OLD);
+  for(var i=0;i<list.length;i++){
+    try{var v=JSON.parse(localStorage.getItem(list[i])||'null');if(v&&(v.name||v.tel))return v;}catch(e){}
+  }
+  return null;
+}
+var own=readOwn();
 function ownPaint(){
   var v=$('ownView');
   if(own&&own.name){
@@ -279,10 +289,15 @@ function ownLoad(){
 }
 function saveOwn(){
   own={name:$('fFromName').value,addr:$('fFromAddr').value,tel:$('fFromTel').value,fax:$('fFromFax').value,reg:$('fFromReg').value};
-  try{localStorage.setItem(K,JSON.stringify(own));}catch(e){}
-  ownPaint();
+  var ok=false;
+  try{localStorage.setItem(K,JSON.stringify(own));ok=true;}catch(e){ok=false;}
+  var m=$('saveMark');
+  if(m) m.textContent = ok ? '保存しました（次からも残ります）' : '保存できません（ブラウザの設定を確認してください）';
 }
-['fFromName','fFromAddr','fFromTel','fFromFax','fFromReg'].forEach(function(id){$(id).addEventListener('blur',saveOwn);});
+['fFromName','fFromAddr','fFromTel','fFromFax','fFromReg'].forEach(function(id){
+  $(id).addEventListener('input',saveOwn);
+  $(id).addEventListener('blur',saveOwn);
+});
 function clients(){try{return JSON.parse(localStorage.getItem(KC)||'[]');}catch(e){return [];}}
 function setClients(a){try{localStorage.setItem(KC,JSON.stringify(a));}catch(e){}paintClients();paintChips();}
 function paintChips(){
@@ -433,6 +448,8 @@ function go(id){
 }
 var tbs=document.querySelectorAll('.tb');
 for(var j=0;j<tbs.length;j++){tbs[j].addEventListener('click',function(){go(this.dataset.v);});}
+window.addEventListener('pagehide',saveOwn);
+document.addEventListener('visibilitychange',function(){if(document.hidden)saveOwn();});
 $('fDate').value=state.date;
 renderItems();ownLoad();paintClients();paintChips();render();
 })();
