@@ -1,468 +1,565 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="書類アプリ">
-<meta name="theme-color" content="#2563eb">
-<title>書類アプリ</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>書類作成</title>
 <style>
-:root{--host-bg:#fff;--host-fg:#111827;--host-fg-muted:#6b7280;--host-card:#fff;--host-input:#f9fafb;--host-muted:#f3f4f6;--host-border:#d1d5db;--host-primary:#2563eb;--host-secondary:#eef2ff;--host-secondary-fg:#1e3a8a;--host-success:#16a34a}
-@media(prefers-color-scheme:dark){:root{--host-bg:#0f1115;--host-fg:#e5e7eb;--host-fg-muted:#9ca3af;--host-card:#171a21;--host-input:#1d2129;--host-muted:#22262f;--host-border:#343a46;--host-primary:#3b82f6;--host-secondary:#22262f;--host-secondary-fg:#cbd5e1}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0}
-.app{width:392px;max-width:100%;margin:0 auto;font-family:Inter,system-ui,-apple-system,"Hiragino Sans",sans-serif;color:var(--host-fg);font-size:18px;line-height:1.6;background:var(--host-bg);min-height:100vh;padding-bottom:8px}
-.bar{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;border-bottom:1px solid var(--host-border)}
-.logo{width:34px;height:34px;border-radius:9px;background:var(--host-primary);display:flex;align-items:center;justify-content:center;flex:none}
-.bar-t{font-size:18px;font-weight:500}
-main{padding:14px 12px 10px}
-h1.h{font-size:22px;font-weight:500;margin:0 0 4px}
-.lead{font-size:15px;color:var(--host-fg-muted);margin:0 0 14px;line-height:1.5}
-.step{background:var(--host-card);border:1px solid var(--host-border);border-radius:16px;padding:16px;margin-bottom:12px}
-.step-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.num{flex:none;width:32px;height:32px;border-radius:50%;background:var(--host-primary);color:#fff;font-size:16px;font-weight:500;display:flex;align-items:center;justify-content:center}
-.step-t{font-size:18px;font-weight:500;line-height:1.3}
-.step-s{font-size:13px;color:var(--host-fg-muted);margin:2px 0 0;line-height:1.4}
-label{display:block;font-size:15px;color:var(--host-fg-muted);margin:0 0 6px}
-input,select,textarea{width:100%;background:var(--host-input);color:var(--host-fg);border:2px solid var(--host-border);border-radius:12px;padding:14px;font:inherit;font-size:19px;outline:none}
-input:focus,select:focus,textarea:focus{border-color:var(--host-primary)}
-.mb{margin-bottom:14px}
+html,body{margin:0;padding:0}
+body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:18px;color:#111;background:#eef1f4;padding-bottom:120px}
+.bar{position:sticky;top:0;z-index:50;background:#14539a;color:#fff;font-size:20px;font-weight:bold;padding:14px;display:flex;justify-content:space-between;align-items:center}
+.bar .save{font-size:15px;background:#0e8a4f;padding:6px 10px;border-radius:8px;opacity:0;transition:opacity .2s}
+.bar .save.on{opacity:1}
+main{padding:14px}
+h1.h{font-size:26px;margin:6px 0 4px}
+.lead{font-size:16px;color:#555;margin:0 0 14px;line-height:1.6}
+.step{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:bold;margin:22px 0 8px}
+.step i{display:inline-flex;width:32px;height:32px;border-radius:50%;background:#14539a;color:#fff;align-items:center;justify-content:center;font-style:normal;font-size:17px;flex:0 0 auto}
+label{display:block;font-size:16px;font-weight:bold;color:#333;margin:12px 0 5px}
+input,select,textarea{width:100%;font-size:20px;padding:14px;border:2px solid #b9c3cd;border-radius:12px;background:#fff;font-family:inherit;color:#111}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#14539a}
+textarea{min-height:110px;line-height:1.5}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.row3{display:grid;grid-template-columns:1fr 84px 96px 46px;gap:8px;align-items:end}
-.lbl{font-size:13px;color:var(--host-fg-muted);margin-bottom:4px;display:block}
-.itembox{border:1px solid var(--host-border);border-radius:12px;padding:12px;margin-bottom:12px}
-.itembox .cap{font-size:13px;color:var(--host-fg-muted);margin-bottom:8px}
-.delbig{height:58px;border:2px solid var(--host-border);background:transparent;color:var(--host-fg-muted);border-radius:12px;font-size:25px;line-height:1;cursor:pointer}
-.addbig{width:100%;height:56px;border:2px dashed var(--host-border);background:transparent;color:var(--host-fg);border-radius:12px;font:inherit;font-size:17px;cursor:pointer}
-.totalbox{background:var(--host-muted);border-radius:14px;padding:14px 16px;margin-top:6px}
-.trow{display:flex;justify-content:space-between;font-size:16px;color:var(--host-fg-muted);padding:4px 0}
-.trow.big{font-size:20px;color:var(--host-fg);font-weight:500;border-top:1px solid var(--host-border);margin-top:6px;padding-top:10px}
-.trow.big b{font-size:29px}
-.actions{display:grid;gap:10px;margin:14px 0 6px}
-.btn{border:none;border-radius:16px;font:inherit;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center}
-.btn-copy{height:72px;font-size:23px;background:var(--host-primary);color:#fff}
-.btn-print{height:72px;font-size:23px;background:var(--host-secondary);color:var(--host-secondary-fg);border:2px solid var(--host-border)}
-.btn-small{min-height:54px;font-size:16px;background:var(--host-secondary);color:var(--host-secondary-fg);border:2px solid var(--host-border);width:100%;border-radius:12px;cursor:pointer;font:inherit;padding:10px}
-.msg{border-radius:14px;padding:14px;font-size:17px;font-weight:500;text-align:center;margin-top:10px;display:none;line-height:1.5}
-.msg.ok{display:block;background:var(--host-success);color:#fff}
-.copybox{display:none;margin-top:10px}
-.copybox.show{display:block}
-.copybox textarea{min-height:200px;font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.6}
-.hint{font-size:14px;color:var(--host-fg-muted);text-align:center;margin:6px 0 0}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.chip{border:2px solid var(--host-border);background:transparent;color:var(--host-fg);border-radius:999px;padding:8px 14px;font:inherit;font-size:15px;cursor:pointer}
-.ownbox{background:var(--host-muted);border-radius:12px;padding:12px 14px;font-size:15px;color:var(--host-fg-muted);word-break:break-word}
-.cli{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--host-border);border-radius:12px;padding:12px 14px;margin-bottom:10px}
-.cli .nm{font-size:17px;word-break:break-word}
-.mini{flex:none;border:2px solid var(--host-border);background:transparent;color:var(--host-fg);border-radius:10px;font:inherit;font-size:14px;padding:8px 12px;cursor:pointer}
-.empty{font-size:15px;color:var(--host-fg-muted);text-align:center;padding:26px 0}
-.savemark{font-size:14px;color:var(--host-success);margin-top:8px;min-height:20px}
-.preview{background:var(--host-muted);border-radius:14px;padding:8px;overflow:hidden}
-.sheet{background:var(--host-card);padding:12px 10px;font-size:9.5px;line-height:1.45;color:var(--host-fg)}
-.doc-title{font-size:20px;font-weight:500;letter-spacing:.35em;text-align:center;margin-bottom:6px}
-.doc-date{text-align:right;font-size:10px;margin-bottom:8px}
-.head{display:flex;gap:8px;justify-content:space-between;margin-bottom:6px}
-.head .left{flex:1;min-width:0}
-.head .right{width:47%}
-.client{font-size:13px;font-weight:500;border-bottom:1px solid var(--host-fg);padding-bottom:3px;margin-bottom:6px;word-break:break-word}
-.honor{font-size:11px;font-weight:400}
-.co{font-size:9px;line-height:1.5;word-break:break-word}
-.co b{font-size:11px;font-weight:500}
-.seal{width:44px;height:44px;border:2px solid #c0392b;border-radius:2px;color:#c0392b;display:flex;align-items:center;justify-content:center;font-size:7px;line-height:1.1;text-align:center;margin-top:4px;padding:2px;writing-mode:vertical-rl;letter-spacing:.05em}
-.meta{width:100%;border-collapse:collapse;font-size:9.5px;margin-bottom:6px}
-.meta th{border:1px solid var(--host-fg);font-weight:400;padding:2px 4px;text-align:left;width:42px}
-.meta td{border:1px solid var(--host-fg);padding:2px 4px;word-break:break-word}
-.leadline{font-size:9.5px;margin:4px 0}
-table.money{width:100%;border-collapse:collapse;font-size:9.5px}
-.money th,.money td{border:1px solid var(--host-fg);padding:3px 4px;text-align:left}
-.money th{font-weight:400}
-.money .amount{text-align:right;font-size:13px;font-weight:500;width:78px}
-.money .en{width:14px;text-align:center}
-.money .rate{width:26px;text-align:center}
-.money .tax{width:44px}
-.money td.val{text-align:right}
-table.items{width:100%;border-collapse:collapse;font-size:8.5px;table-layout:fixed}
-.items th,.items td{border:1px solid var(--host-fg);padding:2px;height:16px;word-break:break-word;vertical-align:top}
-.items th{font-weight:400;text-align:center;height:auto}
-.items td{text-align:center}
-.items td.n{text-align:right}
-.items td.nm{text-align:left}
-.items .sub-lbl{text-align:center;font-weight:500}
-.items col.c1{width:14px}.items col.c3{width:52px}
-.items col.c4{width:22px}.items col.c5{width:22px}.items col.c6{width:40px}
-.items col.c7{width:44px}.items col.c8{width:34px}
-.tabbar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;border-top:1px solid var(--host-border);padding:8px 8px 10px}
-.tb{border:none;background:transparent;color:var(--host-fg-muted);font:inherit;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;border-radius:12px;cursor:pointer}
-.tb.on{color:var(--host-primary);background:var(--host-muted)}
-.tb svg{width:24px;height:24px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+button{font-family:inherit;font-size:19px;font-weight:bold;border:none;border-radius:12px;padding:16px;background:#14539a;color:#fff;cursor:pointer}
+button.sub{background:#5a6a7a}
+button.warn{background:#b23c2e}
+button.line{background:#fff;color:#14539a;border:2px solid #14539a}
+button:active{transform:translateY(1px)}
+.btn-wide{width:100%;margin-top:14px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.msg{font-size:16px;background:#fff8d8;border:2px solid #e0c341;border-radius:10px;padding:10px;margin:10px 0;line-height:1.5}
+.copybox{background:#fff;border:2px solid #14539a;border-radius:12px;padding:12px;margin:12px 0}
+.copybox textarea{font-size:15px;min-height:150px}
+.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:60;display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-top:3px solid #14539a}
+.tabbar button{background:#fff;color:#14539a;font-size:14px;padding:10px 2px;border-radius:0;line-height:1.4}
+.tabbar button.on{background:#14539a;color:#fff}
+.tabbar button span{display:block;font-size:22px}
+.card{background:#fff;border-radius:14px;padding:14px;margin:10px 0;border:2px solid #d5dde5}
+.card b{font-size:19px}
+.card p{margin:4px 0 0;font-size:15px;color:#555;line-height:1.5}
+.card .btns{display:flex;gap:8px;margin-top:10px}
+.card .btns button{flex:1;font-size:16px;padding:12px}
+.tag{display:inline-block;font-size:13px;background:#e8eef5;color:#14539a;border-radius:6px;padding:3px 8px;margin-bottom:6px}
+.cnt{font-size:15px;color:#555;margin:8px 0}
+/* ===== プレビュー ===== */
+.preview{background:#fff;border-radius:8px;padding:10px;overflow:auto;border:2px solid #ccd5de}
+.sheet{background:#fff;font-size:11px;line-height:1.5;color:#000;padding:6px;min-height:200px}
+.sheet .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.sheet .ttl{font-size:22px;font-weight:bold;letter-spacing:4px;border-bottom:3px double #000;display:inline-block;padding:0 6px 4px}
+.sheet .meta{font-size:10px;text-align:right;white-space:nowrap}
+.sheet .to{font-size:14px;font-weight:bold;border-bottom:2px solid #000;display:inline-block;padding:2px 4px 3px;min-width:55%}
+.sheet .honor{font-size:11px;font-weight:normal}
+.sheet .own{font-size:9.5px;text-align:right;line-height:1.45;margin-top:6px;display:flex;gap:6px;justify-content:flex-end;align-items:flex-start}
+.sheet .stamp{width:44px;height:44px;border:2px solid #c22;color:#c22;font-size:9px;line-height:1.05;text-align:center;padding:2px;flex:0 0 auto;word-break:break-all}
+.sheet .subject{border:1px solid #000;margin-top:8px;font-size:10px}
+.sheet .subject div{padding:3px 5px;border-bottom:1px solid #000}
+.sheet .subject div:last-child{border-bottom:none}
+.sheet table{width:100%;border-collapse:collapse;margin-top:8px;font-size:9.5px}
+.sheet th,.sheet td{border:1px solid #000;padding:2px 3px;text-align:center;height:22px;vertical-align:middle;word-break:break-all}
+.sheet th{background:#eee;font-weight:bold;font-size:9px}
+.sheet td.n{width:5%}
+.sheet td.k{width:12%}
+.sheet td.nm{text-align:left}
+.sheet td.q,.sheet td.u{width:7%}
+.sheet td.p,.sheet td.a{width:13%;text-align:right}
+.sheet td.b{width:14%;text-align:left;font-size:8.5px}
+.sheet .sum{display:flex;justify-content:flex-end;margin-top:4px}
+.sheet .sum table{width:52%;border:none;margin:0;font-size:11px}
+.sheet .sum td{border:none;padding:2px 4px;height:auto}
+.sheet .sum td.l{border:1px solid #000;text-align:center;font-weight:bold;background:#f4f4f4}
+.sheet .sum td.v{border:1px solid #000;text-align:right;font-weight:bold}
+.sheet .sum tr.g td{font-size:15px;font-weight:bold}
+.sheet .note{border:1px solid #000;margin-top:6px;padding:4px 5px;font-size:9.5px;min-height:34px;white-space:pre-wrap}
+.sheet .bank{border:1px solid #000;border-top:none;padding:4px 5px;font-size:9.5px;white-space:pre-wrap}
+.sheet .lead-t{margin-top:6px;font-size:10px}
 @media print{
-  html,body{background:#fff!important;margin:0;padding:0}
-  .bar,h1.h,.lead,.tabbar,.actions,.msg,.copybox,.hint{display:none!important}
+  @page{size:A4 portrait;margin:11mm 9mm}
+  body{background:#fff;padding:0;font-size:11pt}
+  .bar,.tabbar,.msg,.actions,.copybox,h1.h,.lead,.step,.card{display:none!important}
+  #v-in,#v-prop,#v-cli,#v-set{display:none!important}
+  #v-check{display:block!important;padding:0!important}
   #v-check>*:not(.preview){display:none!important}
-  .app{width:174mm;max-width:none;font-size:12pt;padding:0;min-height:0}
   main{padding:0}
-  .preview{background:#fff;padding:0;border-radius:0;overflow:visible}
-  .sheet{background:#fff;padding:0;font-size:12pt;line-height:1.5;color:#000}
-  .sheet *{color:#000!important;border-color:#000!important}
-  .doc-title{font-size:26pt;letter-spacing:.5em;margin:0 0 3.5mm}
-  .doc-date{font-size:11.5pt;margin-bottom:4mm}
-  .client{font-size:17pt;border-bottom:1.4pt solid #000;padding-bottom:2.5mm;margin-bottom:3mm}
-  .honor{font-size:12.5pt}
-  .co{font-size:10pt;line-height:1.7}
-  .co b{font-size:12.5pt}
-  .seal{width:22mm;height:22mm;border:1.8pt solid #c0392b;font-size:8.5pt;margin-top:2.5mm}
-  .seal,.seal *{color:#c0392b!important;border-color:#c0392b!important}
-  .meta th,.meta td{border:1pt solid #000;padding:1.4mm 2mm;font-size:10.5pt}
-  .meta th{width:25mm}
-  .leadline{font-size:11pt;margin:2.5mm 0}
-  .money th,.money td{border:1pt solid #000;padding:1.6mm;font-size:10.5pt}
-  .money .amount{font-size:17pt;width:36mm}
-  .money .en{width:7mm}
-  .money .rate{width:12mm;text-align:center}
-  .money .tax{width:20mm}
-  table.items{font-size:10.5pt}
-  .items th,.items td{border:1pt solid #000;height:8mm;padding:.9mm}
-  .items th{height:7mm;padding:1.1mm .9mm}
-  .items col.c1{width:8mm}.items col.c3{width:31mm}
-  .items col.c4{width:12mm}.items col.c5{width:12mm}.items col.c6{width:19mm}
-  .items col.c7{width:23mm}.items col.c8{width:17mm}
-  tr,td,th{page-break-inside:avoid}
-  table{page-break-inside:avoid}
-  @page{size:A4 portrait;margin:12mm}
+  .preview{border:none;padding:0;border-radius:0;overflow:visible}
+  .sheet{padding:0;font-size:11pt;line-height:1.5}
+  .sheet .ttl{font-size:28pt;letter-spacing:6pt;border-bottom:4px double #000}
+  .sheet .meta{font-size:11pt}
+  .sheet .to{font-size:18pt;border-bottom:3px solid #000}
+  .sheet .honor{font-size:12pt}
+  .sheet .own{font-size:9.5pt;line-height:1.5}
+  .sheet .stamp{width:15mm;height:15mm;font-size:9pt;border:2px solid #c22}
+  .sheet .subject{font-size:11pt}
+  .sheet .subject div{padding:3px 6px}
+  .sheet table{font-size:10pt;margin-top:6px}
+  .sheet th{font-size:9pt;padding:2px}
+  .sheet th,.sheet td{height:7mm;padding:1px 3px;page-break-inside:avoid}
+  .sheet td.b{font-size:8.5pt}
+  .sheet .sum table{font-size:11pt}
+  .sheet .sum tr.g td{font-size:15pt}
+  .sheet .note,.sheet .bank{font-size:9.5pt}
+  .sheet .lead-t{font-size:10pt}
+  tr,td,th,table,.subject,.sum,.note{page-break-inside:avoid}
+  .sheet .own,.sheet .stamp{page-break-inside:avoid}
 }
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="bar">
-    <div class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 11h6M9 15h6"/></svg></div>
-    <div class="bar-t">書類アプリ</div>
+
+<div class="bar"><span>書類作成</span><span class="save" id="savemsg">保存しました</span></div>
+
+<main>
+<!-- 入力 -->
+<section id="v-in">
+  <h1 class="h">書類をつくる</h1>
+  <p class="lead">番号の順に入れてください。入れた内容は自動で保存されます。</p>
+
+  <div class="step"><i>1</i>書類の種類</div>
+  <select id="type">
+    <option value="m">見積書</option>
+    <option value="s">請求書</option>
+    <option value="d">納品書</option>
+  </select>
+
+  <div class="step"><i>2</i>出す相手</div>
+  <input id="to_co" placeholder="相手の会社名">
+  <div class="row2">
+    <input id="to_person" placeholder="担当者名(なくてもよい)">
+    <select id="to_honor">
+      <option>御中</option>
+      <option>様</option>
+    </select>
   </div>
 
-  <main>
-    <section id="v-new">
-      <h1 class="h">書類をつくる</h1>
-      <p class="lead">相手の名前を入れて、品物を入れて、最後に印刷です。自分の会社は自動で入ります。</p>
-      <div class="step">
-        <div class="step-head"><div class="num">1</div><div><div class="step-t">相手の名前</div><div class="step-s">名前を入れるだけ</div></div></div>
-        <input id="fClient" placeholder="（株）◯◯" autocomplete="organization">
-        <div class="mb" style="margin-top:14px"><label>敬称</label>
-          <select id="fHonor"><option value="様">様</option><option value="御中">御中</option></select></div>
-        <div class="chips" id="chips"></div>
-      </div>
-      <div class="step">
-        <div class="step-head"><div class="num">2</div><div><div class="step-t">書類の種類と日付</div></div></div>
-        <div class="row2">
-          <div><label>種類</label>
-            <select id="fKind"><option value="見積">御見積書</option><option value="請求">御請求書</option><option value="納品">御納品書</option></select></div>
-          <div><label>日付</label><input id="fDate" type="date"></div>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-head"><div class="num">3</div><div><div class="step-t">工事名と場所</div></div></div>
-        <div class="mb"><label>工事名</label><input id="fWork" placeholder="例：集合所便所取換工事"></div>
-        <div><label>工事場所</label><input id="fPlace" placeholder="例：江戸川区◯◯"></div>
-      </div>
-      <div class="step">
-        <div class="step-head"><div class="num">4</div><div><div class="step-t">品物と金額</div><div class="step-s">数量と、1つの値段を入れる</div></div></div>
-        <div id="itemList"></div>
-        <button class="addbig" id="addItem">＋ 行をふやす</button>
-        <div class="totalbox">
-          <div class="trow"><span>小計</span><span id="tSub">¥0</span></div>
-          <div class="trow"><span>消費税（<span id="tRateLbl">10</span>%）</span><span id="tTax">¥0</span></div>
-          <div class="trow big"><span>税込合計</span><b id="tGrand">¥0</b></div>
-        </div>
-        <div style="margin-top:14px"><label>消費税</label>
-          <select id="fRate"><option value="10">10％（ふつう）</option><option value="8">8％（たべものなど）</option><option value="0">0％（かけない）</option></select></div>
-      </div>
-    </section>
+  <div class="step"><i>3</i>工事の名前と場所</div>
+  <input id="kubun" placeholder="工事名(例: 〇〇マンション 電気工事)">
+  <input id="place" placeholder="場所(物件の住所)" style="margin-top:10px">
 
-    <section id="v-check" hidden>
-      <h1 class="h">できあがり</h1>
-      <p class="lead">A4たて1枚で印刷されます。確認してから押してください。</p>
-      <div class="preview">
-        <div class="sheet">
-          <div class="doc-title" id="sTitle">御見積書</div>
-          <div class="doc-date" id="sDate"></div>
-          <div class="head">
-            <div class="left">
-              <div class="client"><span id="sClient">（宛先）</span><span class="honor" id="sHonor">　様</span></div>
-              <table class="meta"><tr><th>工事名</th><td id="sWork"></td></tr><tr><th>工事場所</th><td id="sPlace"></td></tr></table>
-            </div>
-            <div class="right"><div class="co" id="sFrom"></div><div class="seal" id="seal">印</div></div>
-          </div>
-          <div class="leadline" id="sLead">下記の通り御見積申し上げます</div>
-          <table class="money"><tr>
-            <th>税込合計金額</th><td class="amount" id="sTotal">¥0</td><td class="en">円</td>
-            <th class="rate">税率</th><td class="val" id="sRate">10%</td>
-            <th class="tax">消費税額等</th><td class="val" id="sTax">0</td>
-          </tr></table>
-          <table class="items">
-            <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"><col class="c6"><col class="c7"><col class="c8"></colgroup>
-            <thead><tr><th>No</th><th>名称</th><th>材質・寸法</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>摘要</th></tr></thead>
-            <tbody id="sRows"></tbody>
-            <tfoot><tr><td></td><td class="sub-lbl">小計</td><td></td><td></td><td></td><td></td><td class="n" id="sSub">0</td><td></td></tr></tfoot>
-          </table>
-        </div>
-      </div>
-      <div class="actions">
-        <button class="btn btn-print" id="printBtn">印刷する（FAX）</button>
-        <button class="btn btn-copy" id="copyBtn">コピーする</button>
-      </div>
-      <div class="msg" id="msg"></div>
-      <div class="copybox" id="copyBox">
-        <p class="hint" style="text-align:left;margin-bottom:8px">この文を長押しして「コピー」でもかまいません</p>
-        <textarea id="copyText" readonly></textarea>
-      </div>
-    </section>
+  <div class="step"><i>4</i>品名と金額</div>
+  <div id="rows"></div>
+  <div class="row2" style="margin-top:10px">
+    <button class="line" id="clearRows">明細を空にする</button>
+    <button class="sub" id="toProps">物件から入れる</button>
+  </div>
 
-    <section id="v-clients" hidden>
-      <h1 class="h">相手の名前</h1>
-      <p class="lead">よく使う相手を登録しておくと、押すだけで入ります。</p>
-      <div class="step">
-        <div class="mb"><label>相手の名前を登録</label><input id="fNewClient" placeholder="（株）◯◯"></div>
-        <button class="btn-small" id="addClient">登録する</button>
-      </div>
-      <div id="cliList"></div>
-    </section>
+  <div class="step"><i>5</i>消費税と備考</div>
+  <select id="tax">
+    <option value="10">消費税 10%</option>
+    <option value="8">消費税 8%</option>
+    <option value="0">消費税なし 0%</option>
+  </select>
+  <label>備考</label>
+  <textarea id="note" placeholder="例: 工期 〇月〇日〜〇月〇日 / 諸経費込み"></textarea>
+  <label>振込先</label>
+  <textarea id="bank" placeholder="例: 〇〇銀行 〇〇支店 普通 1234567"></textarea>
 
-    <section id="v-set" hidden>
-      <h1 class="h">設定</h1>
-      <p class="lead">自分の会社を一度入れると、次からも自動で入ります。</p>
-      <div class="step">
-        <div class="step-head"><div class="num">設</div><div><div class="step-t">自分の会社</div><div class="step-s">1回入れるだけで済みます</div></div></div>
-        <div id="ownView"></div>
-        <div id="fromFields" style="display:none">
-          <div class="mb"><label>会社名</label><input id="fFromName" placeholder="例：宇田川電気商会"></div>
-          <div class="mb"><label>住所</label><input id="fFromAddr" placeholder="例：東京都江戸川区中央2丁目33番1号"></div>
-          <div class="mb"><label>電話番号</label><input id="fFromTel" inputmode="tel" placeholder="例：03-0000-0000"></div>
-          <div class="mb"><label>FAX番号</label><input id="fFromFax" inputmode="tel" placeholder="例：03-0000-0000"></div>
-          <div><label>登録番号</label><input id="fFromReg" placeholder="例：T3-8100-1616-1527"></div>
-          <div class="savemark" id="saveMark"></div>
-        </div>
-      </div>
-    </section>
-  </main>
+  <button class="btn-wide" id="goCheck">できあがりを見る</button>
+</section>
 
-  <nav class="tabbar">
-    <button class="tb on" data-v="v-new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20h16"/><path d="M14.5 4.5l4 4L9 18l-5 1 1-5z"/></svg>入力</button>
-    <button class="tb" data-v="v-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h6M9 16h4"/></svg>確認</button>
-    <button class="tb" data-v="v-clients"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.6 3-6 7-6s7 2.4 7 6"/></svg>相手</button>
-    <button class="tb" data-v="v-set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/></svg>設定</button>
-  </nav>
-</div>
+<!-- 確認 -->
+<section id="v-check" hidden>
+  <h1 class="h">できあがり</h1>
+  <p class="lead">印刷するか、コピーしてFAX・メール・LINEで送れます。</p>
+  <div class="actions">
+    <button id="printBtn">印刷する</button>
+    <button class="sub" id="copyBtn">文をコピー</button>
+  </div>
+  <div class="copybox">
+    <label>コピー用(下の文を全選択してコピー)</label>
+    <textarea id="copyText" readonly></textarea>
+    <button class="line btn-wide" id="copyBtn2">この文をコピーする</button>
+  </div>
+  <div class="preview"><div class="sheet" id="sheet"></div></div>
+</section>
+
+<!-- 物件 -->
+<section id="v-prop" hidden>
+  <h1 class="h">物件リスト</h1>
+  <p class="lead">物件をタップすると、宛先・工事名・場所が自動で入ります。</p>
+  <input id="psearch" placeholder="物件名・住所で検索">
+  <label>会社で絞り込む</label>
+  <select id="pco"><option value="">すべての会社</option></select>
+  <div class="cnt" id="pcnt"></div>
+  <div id="plist"></div>
+  <div class="step"><i>+</i>物件をまとめて足す</div>
+  <p class="lead">1行に「物件名,住所,,会社名」の順で貼ってください。</p>
+  <textarea id="pbulk" placeholder="〇〇マンション,江戸川区〇〇1-2-3,,株式会社〇〇"></textarea>
+  <button class="btn-wide" id="padd">まとめて登録する</button>
+  <div class="msg" id="pmsg" hidden></div>
+</section>
+
+<!-- 相手 -->
+<section id="v-cli" hidden>
+  <h1 class="h">相手の記録</h1>
+  <p class="lead">よく使う相手を保存しておけます。タップで呼び出せます。</p>
+  <input id="c_co" placeholder="会社名">
+  <div class="row2">
+    <input id="c_person" placeholder="担当者名">
+    <select id="c_honor"><option>御中</option><option>様</option></select>
+  </div>
+  <button class="btn-wide" id="cadd">この相手を保存する</button>
+  <div id="clist"></div>
+</section>
+
+<!-- 設定 -->
+<section id="v-set" hidden>
+  <h1 class="h">自分の会社</h1>
+  <p class="lead">一度入れれば、次からは自動で入ります。</p>
+  <label>会社名</label>
+  <input id="own_co" placeholder="株式会社〇〇">
+  <label>郵便番号</label>
+  <input id="own_zip" placeholder="〒000-0000">
+  <label>住所</label>
+  <input id="own_addr" placeholder="東京都〇〇区〇〇1-2-3">
+  <div class="row2">
+    <div><label>TEL</label><input id="own_tel" placeholder="03-0000-0000"></div>
+    <div><label>FAX</label><input id="own_fax" placeholder="03-0000-0000"></div>
+  </div>
+  <label>登録番号(インボイス)</label>
+  <input id="own_reg" placeholder="T0000000000000">
+  <label>角印に出す文字</label>
+  <input id="own_stamp" placeholder="会社名の頭6文字まで自動">
+  <label>振込先(いつもの)</label>
+  <textarea id="own_bank"></textarea>
+
+  <div class="step"><i>!</i>データ</div>
+  <button class="line btn-wide" id="backup">全部コピー(バックアップ)</button>
+  <button class="warn btn-wide" id="reset">全部消す</button>
+  <div class="msg" id="smsg" hidden></div>
+</section>
+</main>
+
+<nav class="tabbar">
+  <button data-tab="in" class="on"><span>✎</span>入力</button>
+  <button data-tab="check"><span>☑</span>確認</button>
+  <button data-tab="prop"><span>⌂</span>物件</button>
+  <button data-tab="cli"><span>☺</span>相手</button>
+  <button data-tab="set"><span>⚙</span>設定</button>
+</nav>
+
 <script>
-(function(){
-var K='shorui_app', KC='shorui_app_clients', ROWS=13;
-var OLD=['shorui_app_v4','shorui_app_v3','shorui_app_v2','shorui_app_v1','ojisan_mitumori_v14','ojisan_mitumori_v13','ojisan_mitumori_v12'];
-function $(id){return document.getElementById(id);}
-function yen(n){return '¥'+Math.round(n).toLocaleString('ja-JP');}
-function num(v){var n=parseFloat(String(v).replace(/[^0-9.-]/g,''));return isNaN(n)?0:n;}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
-function iso(d){return d.toISOString().slice(0,10);}
-function era(v){if(!v)return '';var d=new Date(v+'T00:00:00');return '令和 '+(d.getFullYear()-2018)+' 年 '+(d.getMonth()+1)+' 月 '+d.getDate()+' 日';}
-var state={kind:'見積',date:iso(new Date()),client:'',honor:'様',work:'',place:'',rate:'10',items:[{name:'',mat:'',qty:'1',unit:'式',price:'',note:''}]};
+var $=function(id){return document.getElementById(id)};
+var KEY='shorui_app',KCLI='shorui_app_clients',KPROP='shorui_app_props';
+var OLD=['shorui_v5','shorui_app_v5','shorui_v4','shorui_app_v4','shorui_v3','shorui_app_v3','shorui_v2','shorui_app_v2','shorui_v1','shorui_app_v1','shorui_own','shorui_company','shorui_mine'];
+var ROWS=13;
+var TYPES={
+  m:{title:'御見積書',lead:'下記のとおり御見積申し上げます。'},
+  s:{title:'請求書',lead:'下記のとおり御請求申し上げます。'},
+  d:{title:'納品書',lead:'下記のとおり納品いたしました。'}
+};
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function yen(n){n=Math.round(+n||0);return n.toLocaleString('ja-JP')}
+function today(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function era(s){
+  if(!s)return '';
+  var p=String(s).split('-');if(p.length<3)return s;
+  var y=+p[0],m=+p[1],d=+p[2];
+  if(y>=2019)return '令和'+(y-2018)+'年'+m+'月'+d+'日';
+  if(y>=1989)return '平成'+(y-1988)+'年'+m+'月'+d+'日';
+  return y+'年'+m+'月'+d+'日';
+}
+
+/* ===== 保存 ===== */
+var toastT;
+function toast(){var e=$('savemsg');e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(function(){e.classList.remove('on')},900)}
+function ls(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function lr(k){try{var s=localStorage.getItem(k);return s?JSON.parse(s):null}catch(e){return null}}
+
+var own={co:'',zip:'',addr:'',tel:'',fax:'',reg:'',stamp:'',bank:''};
 function readOwn(){
-  var list=[K].concat(OLD);
-  for(var i=0;i<list.length;i++){
-    try{var v=JSON.parse(localStorage.getItem(list[i])||'null');if(v&&(v.name||v.tel))return v;}catch(e){}
+  var o=lr(KEY);
+  if(!o){for(var i=0;i<OLD.length;i++){var t=lr(OLD[i]);if(t){o=t;break}}}
+  if(o){for(var k in own){if(o[k]!=null)own[k]=String(o[k])}}
+  // 旧形式の入れ子対策
+  if(o&&o.own){for(var k2 in own){if(o.own[k2]!=null)own[k2]=String(o.own[k2])}}
+}
+function saveOwn(){own.co=$('own_co').value;own.zip=$('own_zip').value;own.addr=$('own_addr').value;own.tel=$('own_tel').value;own.fax=$('own_fax').value;own.reg=$('own_reg').value;own.stamp=$('own_stamp').value;own.bank=$('own_bank').value;ls(KEY,own);toast()}
+
+var state={type:'m',no:'1',date:today(),to:{company:'',person:'',honor:'御中'},kubun:'',place:'',tax:10,note:'',bank:'',rows:[]};
+function blankRows(){var a=[];for(var i=0;i<ROWS;i++)a.push({kubun:'',name:'',qty:'',unit:'',price:'',note:''});return a}
+
+function load(){
+  readOwn();
+  var s=lr(KEY+'#doc');
+  if(s){
+    state.type=s.type||'m';state.no=s.no||'1';state.date=s.date||today();
+    state.to=s.to||state.to;state.kubun=s.kubun||'';state.place=s.place||'';
+    state.tax=s.tax!=null?+s.tax:10;state.note=s.note||'';state.bank=s.bank||'';
+    state.rows=s.rows||blankRows();
   }
-  return null;
+  while(state.rows.length<ROWS)state.rows.push({kubun:'',name:'',qty:'',unit:'',price:'',note:''});
 }
-var own=readOwn();
-function ownPaint(){
-  var v=$('ownView');
-  if(own&&own.name){
-    v.innerHTML='<div class="ownbox">'+esc(own.name)+(own.tel?'　電話 '+esc(own.tel):'')+'</div>';
-    var b=document.createElement('button'); b.className='btn-small'; b.textContent='会社の情報を変更する'; b.style.margin='10px 0';
-    b.onclick=function(){$('fromFields').style.display='block';};
-    v.appendChild(b);
-  } else {
-    v.innerHTML='<div class="ownbox" style="margin-bottom:10px">まだ登録されていません。下の欄に1回だけ入れてください。</div>';
-    $('fromFields').style.display='block';
-  }
-}
-function ownLoad(){
-  if(own){$('fFromName').value=own.name||'';$('fFromAddr').value=own.addr||'';$('fFromTel').value=own.tel||'';$('fFromFax').value=own.fax||'';$('fFromReg').value=own.reg||'';}
-  ownPaint();
-}
-function saveOwn(){
-  own={name:$('fFromName').value,addr:$('fFromAddr').value,tel:$('fFromTel').value,fax:$('fFromFax').value,reg:$('fFromReg').value};
-  var ok=false;
-  try{localStorage.setItem(K,JSON.stringify(own));ok=true;}catch(e){ok=false;}
-  var m=$('saveMark');
-  if(m) m.textContent = ok ? '保存しました（次からも残ります）' : '保存できません（ブラウザの設定を確認してください）';
-}
-['fFromName','fFromAddr','fFromTel','fFromFax','fFromReg'].forEach(function(id){
-  $(id).addEventListener('input',saveOwn);
-  $(id).addEventListener('blur',saveOwn);
-});
-function clients(){try{return JSON.parse(localStorage.getItem(KC)||'[]');}catch(e){return [];}}
-function setClients(a){try{localStorage.setItem(KC,JSON.stringify(a));}catch(e){}paintClients();paintChips();}
-function paintChips(){
-  var box=$('chips');box.innerHTML='';
-  clients().slice(0,5).forEach(function(n){
-    var b=document.createElement('button');b.className='chip';b.type='button';b.textContent=n;
-    b.onclick=function(){state.client=n;$('fClient').value=n;render();};
-    box.appendChild(b);
-  });
-}
-function paintClients(){
-  var box=$('cliList');box.innerHTML='';
-  var list=clients();
-  if(!list.length){box.innerHTML='<div class="empty">まだ登録がありません</div>';return;}
-  list.forEach(function(n){
-    var d=document.createElement('div');d.className='cli';
-    d.innerHTML='<div class="nm">'+esc(n)+'</div>';
-    var u=document.createElement('button');u.className='mini';u.textContent='使う';
-    u.onclick=function(){state.client=n;$('fClient').value=n;render();go('v-new');};
-    var x=document.createElement('button');x.className='mini';x.textContent='削除';
-    x.onclick=function(){setClients(clients().filter(function(v){return v!==n;}));};
-    var w=document.createElement('div');w.style.display='flex';w.style.gap='6px';
-    w.appendChild(u);w.appendChild(x);d.appendChild(w);
-    box.appendChild(d);
-  });
-}
-$('addClient').addEventListener('click',function(){
-  var n=$('fNewClient').value.trim();if(!n)return;
-  var a=clients().filter(function(v){return v!==n;});a.unshift(n);setClients(a);
-  $('fNewClient').value='';msg('登録しました');
-});
-function pushClient(name){
-  if(!name)return;
-  var a=clients().filter(function(v){return v!==name;});a.unshift(name);setClients(a.slice(0,20));
-}
-function renderItems(){
-  var box=$('itemList');box.innerHTML='';
-  state.items.forEach(function(it,i){
-    var d=document.createElement('div');d.className='itembox';
-    d.innerHTML='<div class="cap">'+(i+1)+'行目</div>'
-      +'<div class="mb"><label>品物の名前</label><input data-i="'+i+'" data-f="name" placeholder="例：便所換気扇工事" value="'+esc(it.name)+'"></div>'
-      +'<div class="mb"><label>材質・寸法（なくてよい）</label><input data-i="'+i+'" data-f="mat" placeholder="例：100φシロッコファン" value="'+esc(it.mat)+'"></div>'
-      +'<div class="row3"><div><span class="lbl">数量</span><input data-i="'+i+'" data-f="qty" inputmode="numeric" value="'+esc(it.qty)+'"></div>'
-      +'<div><span class="lbl">単位</span><input data-i="'+i+'" data-f="unit" value="'+esc(it.unit)+'"></div>'
-      +'<div><span class="lbl">1つの値段</span><input data-i="'+i+'" data-f="price" inputmode="numeric" placeholder="0" value="'+esc(it.price)+'"></div>'
-      +'<button class="delbig" data-del="'+i+'" aria-label="けす">×</button></div>'
-      +'<div style="margin-top:12px"><label>摘要（なくてよい）</label><input data-i="'+i+'" data-f="note" placeholder="例：型" value="'+esc(it.note)+'"></div>';
-    box.appendChild(d);
-  });
-}
-function calc(){
-  var sub=state.items.reduce(function(a,it){return a+num(it.qty)*num(it.price);},0);
-  var tax=Math.floor(sub*(num(state.rate)/100));
-  return {sub:sub,tax:tax,grand:sub+tax};
-}
-function render(){
-  var c=calc();
-  $('tSub').textContent=yen(c.sub);$('tTax').textContent=yen(c.tax);$('tGrand').textContent=yen(c.grand);
-  $('tRateLbl').textContent=state.rate;
-  $('sTitle').textContent='御'+state.kind+'書';
-  $('sLead').textContent='下記の通り御'+state.kind+'申し上げます';
-  $('sDate').textContent=era(state.date);
-  $('sClient').textContent=state.client||'（宛先）';
-  $('sHonor').textContent='　'+state.honor;
-  $('sWork').textContent=state.work||'';$('sPlace').textContent=state.place||'';
-  $('sTotal').textContent=yen(c.grand);
-  $('sRate').textContent=state.rate+'%';
-  $('sTax').textContent=Math.round(c.tax).toLocaleString('ja-JP');
-  $('sSub').textContent=Math.round(c.sub).toLocaleString('ja-JP');
-  var rows=$('sRows');rows.innerHTML='';
-  var list=state.items.filter(function(it){return it.name||num(it.price);});
+function saveDoc(){ls(KEY+'#doc',state)}
+
+/* ===== 入力欄 ===== */
+function renderInputs(){
+  var h='';
   for(var i=0;i<ROWS;i++){
-    var it=list[i];var tr=document.createElement('tr');
-    if(it){
-      tr.innerHTML='<td>'+(i+1)+'</td><td class="nm">'+esc(it.name)+'</td><td>'+esc(it.mat)+'</td><td>'+esc(it.qty)+'</td><td>'+esc(it.unit)+'</td>'
-        +'<td class="n">'+(num(it.price)?Math.round(num(it.price)).toLocaleString('ja-JP'):'')+'</td>'
-        +'<td class="n">'+(num(it.price)?Math.round(num(it.qty)*num(it.price)).toLocaleString('ja-JP'):'')+'</td>'
-        +'<td>'+esc(it.note)+'</td>';
-    } else {tr.innerHTML='<td>'+(i+1)+'</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>';}
-    rows.appendChild(tr);
+    var r=state.rows[i];
+    h+='<div class="card" data-i="'+i+'">'
+      +'<b>'+(i+1)+'行目</b>'
+      +'<div class="row2" style="margin-top:8px"><input data-k="kubun" placeholder="工種" value="'+esc(r.kubun)+'"><input data-k="unit" placeholder="単位" value="'+esc(r.unit)+'"></div>'
+      +'<input data-k="name" placeholder="品名・工事内容" value="'+esc(r.name)+'" style="margin-top:8px">'
+      +'<div class="row3" style="margin-top:8px"><input data-k="qty" type="number" inputmode="decimal" placeholder="数量" value="'+esc(r.qty)+'"><input data-k="price" type="number" inputmode="numeric" placeholder="単価" value="'+esc(r.price)+'"><input data-k="note" placeholder="備考" value="'+esc(r.note)+'"></div>'
+      +'</div>';
   }
-  var n=$('fFromName').value,a=$('fFromAddr').value,t=$('fFromTel').value,f=$('fFromFax').value,r=$('fFromReg').value;
-  var p=[];if(n)p.push('<b>'+esc(n)+'</b>');if(a)p.push(esc(a));
-  if(t)p.push('電話　'+esc(t));if(f)p.push('FAX　'+esc(f));if(r)p.push(esc(r));
-  $('sFrom').innerHTML=p.join('<br>');
-  $('seal').textContent=n?n.replace(/[\s（）()]/g,'').slice(0,6):'印';
+  $('rows').innerHTML=h;
 }
-['fKind','fDate','fClient','fHonor','fWork','fPlace','fRate'].forEach(function(id){
-  $(id).addEventListener('input',function(e){
-    var k={fKind:'kind',fDate:'date',fClient:'client',fHonor:'honor',fWork:'work',fPlace:'place',fRate:'rate'}[id];
-    state[k]=e.target.value;render();
+
+function bindFields(){
+  $('type').onchange=function(){state.type=this.value;sync();renderSheet()};
+  $('to_co').oninput=function(){state.to.company=this.value;sync()};
+  $('to_person').oninput=function(){state.to.person=this.value;sync()};
+  $('to_honor').onchange=function(){state.to.honor=this.value;sync();renderSheet()};
+  $('kubun').oninput=function(){state.kubun=this.value;sync()};
+  $('place').oninput=function(){state.place=this.value;sync()};
+  $('tax').onchange=function(){state.tax=+this.value;sync();renderSheet()};
+  $('note').oninput=function(){state.note=this.value;sync()};
+  $('bank').oninput=function(){state.bank=this.value;sync()};
+  $('rows').addEventListener('input',function(e){
+    var k=e.target.getAttribute('data-k');if(!k)return;
+    var card=e.target.closest('.card');var i=+card.getAttribute('data-i');
+    state.rows[i][k]=e.target.value;sync();renderSheet();
   });
-});
-['fFromName','fFromAddr','fFromTel','fFromFax','fFromReg'].forEach(function(id){$(id).addEventListener('input',render);});
-$('itemList').addEventListener('input',function(e){
-  var i=e.target.dataset.i,f=e.target.dataset.f;if(i===undefined)return;
-  state.items[+i][f]=e.target.value;render();
-});
-$('itemList').addEventListener('click',function(e){
-  var i=e.target.dataset.del;if(i===undefined)return;
-  state.items.splice(+i,1);
-  if(!state.items.length)state.items.push({name:'',mat:'',qty:'1',unit:'式',price:'',note:''});
-  renderItems();render();
-});
-$('addItem').addEventListener('click',function(){
-  if(state.items.length>=ROWS){msg(ROWS+'行までです');return;}
-  state.items.push({name:'',mat:'',qty:'1',unit:'式',price:'',note:''});
-  renderItems();render();
-});
-function buildText(){
-  var rate=num($('fRate').value);
-  var rows=state.items.filter(function(it){return it.name||num(it.price);});
+  $('clearRows').onclick=function(){if(confirm('明細を空にしますか?')){state.rows=blankRows();renderInputs();sync();renderSheet()}};
+  $('toProps').onclick=function(){showTab('prop')};
+  $('goCheck').onclick=function(){renderSheet();showTab('check')};
+  $('printBtn').onclick=function(){renderSheet();setTimeout(function(){window.print()},250)};
+  $('copyBtn').onclick=function(){doCopy()};
+  $('copyBtn2').onclick=function(){doCopy()};
+  window.addEventListener('pagehide',function(){saveOwn();saveDoc()});
+}
+
+function sync(){
+  saveDoc();
+  var t=state.to.company;
+  if(t||state.kubun)toast();
+}
+
+/* ===== 計算 ===== */
+function calc(){
   var sub=0;
-  rows.forEach(function(it){ sub += num(it.qty)*num(it.price); });
-  var tax=Math.floor(sub*rate/100);
-  var grand=sub+tax;
-  var L=['御'+state.kind+'書',era(state.date),'',(state.client||'')+'　'+state.honor,''];
-  if(state.work)L.push('工事名：'+state.work);
-  if(state.place)L.push('工事場所：'+state.place);
-  L.push('下記の通り御'+state.kind+'申し上げます','');
-  rows.forEach(function(it,i){
-    L.push((i+1)+'. '+it.name+(it.mat?' / '+it.mat:'')+'  '+it.qty+it.unit+' × '+yen(num(it.price))+' = '+yen(num(it.qty)*num(it.price))+(it.note?'（'+it.note+'）':''));
+  state.rows.forEach(function(r){sub+=(+r.qty||0)*(+r.price||0)});
+  var tax=Math.floor(sub*state.tax/100);
+  return {sub:sub,tax:tax,total:sub+tax};
+}
+
+/* ===== プレビュー ===== */
+function stampText(){
+  var t=(own.stamp||own.co||'').trim();
+  return esc(t.slice(0,6));
+}
+function renderSheet(){
+  var s=state,c=calc(),T=TYPES[s.type]||TYPES.m;
+  var h='';
+  h+='<div class="top"><div><div class="ttl">'+T.title+'</div></div>'
+   +'<div class="meta">No. '+esc(s.no)+'<br>'+esc(era(s.date))+'</div></div>';
+  h+='<div style="margin-top:10px"><div class="to">'+esc(s.to.company||'　')+'　'+esc(s.to.person)+' <span class="honor">'+esc(s.to.honor)+'</span></div></div>';
+  h+='<div class="own"><div>'+(own.zip?'〒'+esc(own.zip)+'<br>':'')+esc(own.co)+'<br>'+esc(own.addr)+(own.tel?'<br>TEL '+esc(own.tel):'')+(own.fax?' FAX '+esc(own.fax):'')+(own.reg?'<br>登録番号 '+esc(own.reg):'')+'</div><div class="stamp">'+(stampText()||'角印')+'</div></div>';
+  h+='<div class="lead-t">'+esc(T.lead)+'</div>';
+  h+='<div class="subject"><div>工事名: '+esc(s.kubun)+'</div><div>場所: '+esc(s.place)+'</div></div>';
+  h+='<table><thead><tr><th>No</th><th>工種</th><th>品名・工事内容</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>備考</th></tr></thead><tbody>';
+  for(var i=0;i<ROWS;i++){
+    var r=s.rows[i]||{};
+    var a=(+r.qty||0)*(+r.price||0);
+    h+='<tr><td class="n">'+(i+1)+'</td><td class="k">'+esc(r.kubun)+'</td><td class="nm">'+esc(r.name)+'</td><td class="q">'+esc(r.qty)+'</td><td class="u">'+esc(r.unit)+'</td><td class="p">'+(r.price?yen(r.price):'')+'</td><td class="a">'+(a?yen(a):'')+'</td><td class="b">'+esc(r.note)+'</td></tr>';
+  }
+  h+='</tbody></table>';
+  h+='<div class="sum"><table><tr><td class="l">小計</td><td class="v">'+yen(c.sub)+'</td></tr>'
+   +'<tr><td class="l">消費税('+s.tax+'%)</td><td class="v">'+yen(c.tax)+'</td></tr>'
+   +'<tr class="g"><td class="l">合計</td><td class="v">'+yen(c.total)+'</td></tr></table></div>';
+  h+='<div class="note">'+esc(s.note).replace(/\n/g,'<br>')+'</div>';
+  h+='<div class="bank">'+esc(s.bank||own.bank).replace(/\n/g,'<br>')+'</div>';
+  $('sheet').innerHTML=h;
+  $('copyText').value=buildText();
+}
+
+/* ===== コピー文 ===== */
+function buildText(){
+  var s=state,c=calc(),T=TYPES[s.type]||TYPES.m,L=[];
+  L.push(T.title);L.push('No.'+s.no+'　'+era(s.date));L.push('');
+  L.push('宛先: '+s.to.company+'　'+s.to.person+'　'+s.to.honor);
+  L.push(T.lead);L.push('---');
+  s.rows.forEach(function(r,i){
+    if(r.name||r.price){
+      var a=(+r.qty||0)*(+r.price||0);
+      L.push((i+1)+'. '+(r.kubun?r.kubun+' ':'')+r.name+'　'+r.qty+r.unit+' × '+yen(r.price)+' = '+yen(a)+(r.note?'　('+r.note+')':''));
+    }
   });
-  L.push('');
-  L.push('小計　'+yen(sub));
-  L.push('消費税（'+rate+'％）　'+yen(tax));
-  L.push('合計　'+yen(grand));
-  L.push('');
-  L.push('税込合計金額　'+yen(grand)+' 円');
-  var n=$('fFromName').value,a=$('fFromAddr').value,t=$('fFromTel').value,f=$('fFromFax').value,r=$('fFromReg').value;
-  if(n){L.push('');L.push('---');L.push(n);if(a)L.push(a);if(t)L.push('電話 '+t);if(f)L.push('FAX '+f);if(r)L.push(r);}
+  L.push('---');
+  L.push('小計: '+yen(c.sub));L.push('消費税('+s.tax+'%): '+yen(c.tax));L.push('合計: '+yen(c.total));
+  if(s.note)L.push('備考: '+s.note);
+  var b=s.bank||own.bank;if(b)L.push('振込先: '+b);
+  if(s.kubun)L.push('');if(s.kubun)L.push('工事名: '+s.kubun);if(s.place)L.push('場所: '+s.place);
+  L.push('');L.push(own.co);if(own.addr)L.push(own.addr);if(own.tel)L.push('TEL '+own.tel);
   return L.join('\n');
 }
-var msgT;
-function msg(t,where){
-  var m=$(where||'msg');m.className='msg ok';m.textContent=t;
-  clearTimeout(msgT);msgT=setTimeout(function(){m.className='msg';},6000);
-}
-$('copyBtn').addEventListener('click',function(){
-  if(!state.client){msg('「相手」の画面で名前を入れてください');return;}
-  var text=buildText();
-  $('copyText').value=text;$('copyBox').classList.add('show');
-  saveOwn();pushClient(state.client);
+function doCopy(){
+  var t=$('copyText').value;
   if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(function(){msg('コピーしました');},function(){$('copyText').select();msg('下の文を長押ししてコピーしてください');});
-  } else {$('copyText').select();msg('下の文を長押ししてコピーしてください');}
-});
-$('printBtn').addEventListener('click',function(){
-  if(!state.client){msg('「相手」の画面で名前を入れてください');return;}
-  saveOwn();pushClient(state.client);window.print();
-});
-function go(id){
-  ['v-new','v-check','v-clients','v-set'].forEach(function(v){$(v).hidden=(v!==id);});
-  var tbs=document.querySelectorAll('.tb');
-  for(var i=0;i<tbs.length;i++)tbs[i].classList.toggle('on',tbs[i].dataset.v===id);
+    navigator.clipboard.writeText(t).then(function(){toast()},function(){fallback()});
+  }else fallback();
+  function fallback(){var ta=$('copyText');ta.removeAttribute('readonly');ta.select();document.execCommand('copy');ta.setAttribute('readonly','readonly');toast()}
+}
+
+/* ===== 物件 ===== */
+var SEED="アーバングリーハイツ,東京都江戸川区瑞江2-30-1,,株式会社広島興産\nSAビル,東京都江戸川区南篠崎町2-7-6,,株式会社広島興産\nSフラット,東京都江戸川区一之江4-9-13,,株式会社広島興産\nあひる荘,東京都江戸川区江戸川4-22-5,,株式会社広島興産\nコーポリリック,東京都江戸川区西瑞江4-17-27,,株式会社広島興産\nコーポリリック行徳A棟,千葉県市川市福栄1-8-19,,株式会社広島興産\nコーポリリック行徳B棟,千葉県市川市福栄1-8-20,,株式会社広島興産\nコーラル,東京都江戸川区一之江3-22-7,,株式会社広島興産\nシャルメ,東京都江戸川区一之江3-22-8,,株式会社広島興産\nロッソ,東京都江戸川区一之江3-22-17,,株式会社広島興産\n鈴木コーポ,東京都江戸川区江戸川4-23-41,,株式会社広島興産\nすずらんマンション,東京都江戸川区東小岩5-14-10,,株式会社広島興産\n第1メゾンシャンブル,東京都江戸川区江戸川3-4-13,,株式会社広島興産\n第2メゾンシャンブル,東京都江戸川区西瑞江3-7-11,,株式会社広島興産\n第3メゾンシャンブル,東京都江戸川区江戸川3-4-13,,株式会社広島興産\n高橋ビル,東京都江戸川区南篠崎町4-22-16,,株式会社広島興産\n第3山本ビル,東京都江戸川区篠崎町7-7-7,,株式会社広島興産\n第2SAビル,東京都江戸川区一之江3-1-11,,株式会社広島興産\nドエル,東京都江戸川区西瑞江3-5-10,,株式会社広島興産\nドムスA,東京都江戸川区西瑞江3-11-3,,株式会社広島興産\nメルベーユ,東京都江戸川区西瑞江3-11-2,,株式会社広島興産\nハイブリッジハイツ,東京都江戸川区瑞江1-24-5,,株式会社広島興産\nビラパレス浦安,千葉県浦安市猫実1-1-14,,株式会社広島興産\nコフレット,千葉県浦安市堀江5-15-9,,株式会社広島興産\nビラパレス上篠,東京都江戸川区上篠崎3-11-8,,株式会社広島興産\nビラパレスみずえ,東京都江戸川区西瑞江3-15-19,,株式会社広島興産\nマノワール,東京都江戸川区一之江4-6-17,,株式会社広島興産\n山本コーポ,東京都江戸川区北葛西3-8-3,,株式会社広島興産\nレアルゼ,東京都江戸川区船堀6-3-11,,株式会社広島興産\nPIER60,東京都江戸川区鹿骨4-20-19,,株式会社広島興産\nPIER46,東京都江戸川区鹿骨4-24-4,,株式会社広島興産\nPIER61,東京都江戸川区鹿骨4-20-19,,株式会社広島興産\nエムハイム,東京都江戸川区鹿骨5-7-15,,株式会社広島興産\n清和荘,東京都江戸川区鹿骨5-38-17,,株式会社広島興産\nリート,東京都江戸川区鹿骨4-32-4,,株式会社広島興産\nゴールドフォレスト,東京都江戸川区鹿骨2-28-8,,株式会社広島興産\nコーポコスモ,葛飾区西新小岩4-1-18,,トーケン産業㈱\n朝日マンション1階店舗,江戸川区南小岩8-16-8,,トーケン産業㈱\nトーケン貸家,江戸川区本一色3-11-29,,トーケン産業㈱\n第5スターコーポ,江戸川区松島4-24-20,,コーセー不動産㈱\n第6スターコーポ,江戸川区南小岩5-16-19,,コーセー不動産㈱\n第7スターコーポ,江戸川区本一色3-21-2,,コーセー不動産㈱\n第8スターコーポ,葛飾区西新小岩4-1-18,,コーセー不動産㈱\n第3コーセーマンション,葛飾区堀切2-56-4,,コーセー不動産㈱\n第1スターコーポ,江戸川区松島4-11-14,,管理物件\n第2スターコーポ,江戸川区松島4-11-14,,管理物件\n第3スターコーポ,葛飾区新小岩3-14-24,,管理物件\n第5コーセーマンション,江戸川区船堀6-1-12,,管理物件\n(名称不鮮明),葛飾区新小岩4-10-12,,管理物件\nベルメゾンコパ,葛飾区新小岩1-54-9,,管理物件\nメゾンブランシュカワノ,江戸川区松島1-14-1,,管理物件\nミドルコーポ,江戸川区中央2-14-13,,管理物件\n新小岩スカイマンション,葛飾区新小岩1-56-10,,管理物件\nパシフィック新小岩1104号,葛飾区新小岩2-7-15,,管理物件\n二上荘,葛飾区新小岩4-10-12,,管理物件\nタケイマンション304号,江戸川区本一色1-28-7,,管理物件\n第3ライオンズMC608号,江戸川区本一色1-24-16,,管理物件\n大和ハウス,葛飾区新小岩1-17-12,,管理物件\nコーポ平野,江戸川区中央4-15-20,,管理物件\nクサノハイツ,葛飾区新小岩2-20-16,,管理物件\nフレッシュハイツ,江戸川区本一色1-3-19,,管理物件\n浦野貸家,江戸川区松島3-33-9,,貸家\n国分貸家,江戸川区本一色3-11-26,,貸家\n高橋貸家,江戸川区本一色3-27-9,,貸家\n秋元貸家,江戸川区松島1-8-16,,貸家\n高桑貸家,江戸川区鹿骨1-50-12,,貸家\n小笠原貸家,葛飾区新小岩3-27-12,,貸家\n松崎貸家,葛飾区新小岩3-23-11,,貸家\n早坂貸家,葛飾区東新小岩5-19-12,,貸家\n高橋貸家,葛飾区新小岩3-16-4,,貸家\n小畑貸家,江戸川区本一色2-8-12,,貸家\n早坂,江戸川区東新小岩1-18-14,,貸家\n高津第1,江戸川区本一色1-21-1,,管理駐車場\n高津第2,江戸川区本一色1-26,,管理駐車場\n栄荘前,江戸川区本一色1-21-19,,管理駐車場\n(有)高津産業,江戸川区本一色1-5-28,,管理駐車場\n越塚第2,江戸川区本一色3-18-18,,管理駐車場\n越塚第3,江戸川区本一色3-11-28,,管理駐車場\n佐藤第1,葛飾区新小岩2-9-14,,管理駐車場\n岩下,葛飾区新小岩3-6-14,,管理駐車場\nコンフォート,江戸川区本一色3-27-4,,管理駐車場\n佐藤はる,江戸川区興宮3,,管理駐車場\n上篠崎,江戸川区上篠崎3-15-3,,管理駐車場\n大浦,葛飾区新小岩3-24-3,,管理駐車場\n中央4丁目,江戸川区中央4-2-24,,管理駐車場\n第7,江戸川区本一色3-21-2,,管理駐車場\n第5,江戸川区松島4-24-22,,管理駐車場\n桃井,葛飾区新小岩4-1-1,,管理駐車場\nパークテラス,葛飾区新小岩3-20-10,,管理駐車場\n伊波駐車,葛飾区新小岩4-1-1,,管理駐車場\nメゾンドIN,江戸川区本一色3-11-34,,貸倉庫";
+
+var props=[];
+function parseLine(l){
+  var p=String(l).split(',');
+  var name=(p[0]||'').trim(),addr=(p[1]||'').trim(),co=(p[3]||p[2]||'').trim();
+  if(!name)return null;
+  return {name:name,addr:addr,co:co||'（会社なし）'};
+}
+function initProps(){
+  var saved=lr(KPROP);
+  if(saved&&saved.length){props=saved}
+  else{SEED.split('\n').forEach(function(l){var o=parseLine(l);if(o)props.push(o)});ls(KPROP,props)}
+}
+function saveProps(){ls(KPROP,props)}
+
+function renderProps(){
+  var q=($('psearch').value||'').trim(),co=$('pco').value;
+  var list=props.filter(function(p){
+    if(co&&p.co!==co)return false;
+    if(q&&p.name.indexOf(q)<0&&p.addr.indexOf(q)<0)return false;
+    return true;
+  });
+  $('pcnt').textContent=list.length+'件 / 全'+props.length+'件';
+  if(!list.length){$('plist').innerHTML='<div class="msg">見つかりません。別の言葉で検索してください。</div>';return}
+  var h='';
+  list.forEach(function(p){
+    var i=props.indexOf(p);
+    h+='<div class="card"><span class="tag">'+esc(p.co)+'</span><b>'+esc(p.name)+'</b><p>'+esc(p.addr)+'</p>'
+      +'<div class="btns"><button data-use="'+i+'">この物件を使う</button><button class="warn" data-del="'+i+'">削除</button></div></div>';
+  });
+  $('plist').innerHTML=h;
+}
+function renderCoOptions(){
+  var cos=[];
+  props.forEach(function(p){if(cos.indexOf(p.co)<0)cos.push(p.co)});
+  var cur=$('pco').value;
+  $('pco').innerHTML='<option value="">すべての会社</option>'+cos.map(function(c){return '<option>'+esc(c)+'</option>'}).join('');
+  if(cos.indexOf(cur)>=0)$('pco').value=cur;
+}
+function useProp(i){
+  var p=props[i];if(!p)return;
+  state.to.company=p.co==='（会社なし）'?'':p.co;
+  state.kubun=p.name+' 電気工事';
+  state.place=p.addr;
+  $('to_co').value=state.to.company;$('kubun').value=state.kubun;$('place').value=state.place;
+  saveDoc();renderSheet();showTab('in');
+}
+
+/* ===== 相手 ===== */
+var clients=[];
+function initClients(){clients=lr(KCLI)||[]}
+function renderClients(){
+  if(!clients.length){$('clist').innerHTML='<div class="msg">まだ登録がありません。</div>';return}
+  var h='';
+  clients.forEach(function(c,i){
+    h+='<div class="card"><b>'+esc(c.co)+'</b><p>'+esc(c.person||'')+'　'+esc(c.honor||'')+'</p>'
+      +'<div class="btns"><button data-cuse="'+i+'">この相手を使う</button><button class="warn" data-cdel="'+i+'">削除</button></div></div>';
+  });
+  $('clist').innerHTML=h;
+}
+
+/* ===== タブ ===== */
+var TABS=['in','check','prop','cli','set'];
+function showTab(t){
+  TABS.forEach(function(k){$('v-'+k).hidden=(k!==t)});
+  document.querySelectorAll('.tabbar button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-tab')===t)});
+  if(t==='check')renderSheet();
+  if(t==='prop'){renderCoOptions();renderProps()}
+  if(t==='cli')renderClients();
   window.scrollTo(0,0);
 }
-var tbs=document.querySelectorAll('.tb');
-for(var j=0;j<tbs.length;j++){tbs[j].addEventListener('click',function(){go(this.dataset.v);});}
-window.addEventListener('pagehide',saveOwn);
-document.addEventListener('visibilitychange',function(){if(document.hidden)saveOwn();});
-$('fDate').value=state.date;
-renderItems();ownLoad();paintClients();paintChips();render();
-})();
+
+/* ===== 起動 ===== */
+function boot(){
+  load();
+  renderInputs();
+  bindFields();
+  $('type').value=state.type;
+  $('to_co').value=state.to.company;
+  $('to_person').value=state.to.person;
+  $('to_honor').value=state.to.honor;
+  $('kubun').value=state.kubun;
+  $('place').value=state.place;
+  $('tax').value=String(state.tax);
+  $('note').value=state.note;
+  $('bank').value=state.bank;
+  $('own_co').value=own.co;$('own_zip').value=own.zip;$('own_addr').value=own.addr;
+  $('own_tel').value=own.tel;$('own_fax').value=own.fax;$('own_reg').value=own.reg;
+  $('own_stamp').value=own.stamp;$('own_bank').value=own.bank;
+
+  ['own_co','own_zip','own_addr','own_tel','own_fax','own_reg','own_stamp','own_bank'].forEach(function(id){
+    $(id).addEventListener('input',saveOwn);
+    $(id).addEventListener('blur',function(){saveOwn();renderSheet()});
+  });
+
+  initProps();initClients();
+
+  document.querySelectorAll('.tabbar button').forEach(function(b){
+    b.onclick=function(){showTab(b.getAttribute('data-tab'))};
+  });
+
+  $('psearch').oninput=renderProps;
+  $('pco').onchange=renderProps;
+  $('plist').addEventListener('click',function(e){
+    var u=e.target.getAttribute('data-use'),d=e.target.getAttribute('data-del');
+    if(u!=null)useProp(+u);
+    if(d!=null){if(confirm('この物件を削除しますか?')){props.splice(+d,1);saveProps();renderCoOptions();renderProps()}}
+  });
+  $('padd').onclick=function(){
+    var lines=$('pbulk').value.split('\n'),n=0;
+    lines.forEach(function(l){
+      var o=parseLine(l);if(!o)return;
+      var dup=props.some(function(p){return p.name===o.name&&p.addr===o.addr});
+      if(dup)return;
+      props.push(o);n++;
+    });
+    if(n){saveProps();$('pbulk').value='';renderCoOptions();renderProps()}
+    $('pmsg').hidden=false;
+    $('pmsg').textContent=n?n+'件を登録しました。':'新しい物件はありませんでした(重複か空欄)。';
+  });
+
+  $('cadd').onclick=function(){
+    var co=$('c_co').value.trim();if(!co){alert('会社名を入れてください');return}
+    clients.push({co:co,person:$('c_person').value.trim(),honor:$('c_honor').value});
+    ls(KCLI,clients);$('c_co').value='';$('c_person').value='';renderClients();
+  };
+  $('clist').addEventListener('click',function(e){
+    var u=e.target.getAttribute('data-cuse'),d=e.target.getAttribute('data-cdel');
+    if(u!=null){
+      var c=clients[+u];if(!c)return;
+      state.to.company=c.co;state.to.person=c.person;state.to.honor=c.honor||'御中';
+      $('to_co').value=c.co;$('to_person').value=c.person;$('to_honor').value=state.to.honor;
+      saveDoc();renderSheet();showTab('in');
+    }
+    if(d!=null){if(confirm('削除しますか?')){clients.splice(+d,1);ls(KCLI,clients);renderClients()}}
+  });
+
+  $('backup').onclick=function(){
+    var data=JSON.stringify({own:own,props:props,clients:clients});
+    var ta=document.createElement('textarea');ta.value=data;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy')}catch(e){}
+    document.body.removeChild(ta);
+    $('smsg').hidden=false;$('smsg').textContent='バックアップをコピーしました。メモ帳などに貼って保存してください。';
+  };
+  $('reset').onclick=function(){
+    if(!confirm('会社情報・物件・相手を全部消します。よろしいですか?'))return;
+    [KEY,KEY+'#doc',KCLI,KPROP].forEach(function(k){localStorage.removeItem(k)});
+    location.reload();
+  };
+
+  renderSheet();
+  showTab('in');
+}
+boot();
 </script>
 </body>
 </html>
