@@ -104,32 +104,33 @@ table.items{width:100%;border-collapse:collapse;font-size:8.5px;table-layout:fix
   .app{width:174mm;max-width:none;font-size:12pt;padding:0;min-height:0}
   main{padding:0}
   .preview{background:#fff;padding:0;border-radius:0;overflow:visible}
-  .sheet{background:#fff;padding:0;font-size:12pt;line-height:1.6;color:#000}
+  .sheet{background:#fff;padding:0;font-size:12pt;line-height:1.5;color:#000}
   .sheet *{color:#000!important;border-color:#000!important}
-  .doc-title{font-size:28pt;letter-spacing:.5em;margin:0 0 5mm}
-  .doc-date{font-size:12pt;margin-bottom:6mm}
-  .client{font-size:18pt;border-bottom:1.4pt solid #000;padding-bottom:3mm;margin-bottom:4mm}
-  .honor{font-size:13pt}
-  .co{font-size:10.5pt;line-height:1.8}
-  .co b{font-size:13pt}
-  .seal{width:24mm;height:24mm;border:1.8pt solid #c0392b;font-size:9pt;margin-top:3mm}
+  .doc-title{font-size:26pt;letter-spacing:.5em;margin:0 0 3.5mm}
+  .doc-date{font-size:11.5pt;margin-bottom:4mm}
+  .client{font-size:17pt;border-bottom:1.4pt solid #000;padding-bottom:2.5mm;margin-bottom:3mm}
+  .honor{font-size:12.5pt}
+  .co{font-size:10pt;line-height:1.7}
+  .co b{font-size:12.5pt}
+  .seal{width:22mm;height:22mm;border:1.8pt solid #c0392b;font-size:8.5pt;margin-top:2.5mm}
   .seal,.seal *{color:#c0392b!important;border-color:#c0392b!important}
-  .meta th,.meta td{border:1pt solid #000;padding:1.8mm 2mm;font-size:11pt}
-  .meta th{width:26mm}
-  .leadline{font-size:11.5pt;margin:3mm 0}
-  .money th,.money td{border:1pt solid #000;padding:2mm;font-size:11pt}
-  .money .amount{font-size:18pt;width:38mm}
+  .meta th,.meta td{border:1pt solid #000;padding:1.4mm 2mm;font-size:10.5pt}
+  .meta th{width:25mm}
+  .leadline{font-size:11pt;margin:2.5mm 0}
+  .money th,.money td{border:1pt solid #000;padding:1.6mm;font-size:10.5pt}
+  .money .amount{font-size:17pt;width:36mm}
   .money .en{width:7mm}
   .money .rate{width:12mm;text-align:center}
-  .money .tax{width:21mm}
-  table.items{font-size:11pt}
-  .items th,.items td{border:1pt solid #000;height:9mm;padding:1mm}
-  .items th{height:8mm;padding:1.2mm 1mm}
-  .items col.c1{width:8mm}.items col.c3{width:32mm}
-  .items col.c4{width:12mm}.items col.c5{width:12mm}.items col.c6{width:20mm}
-  .items col.c7{width:24mm}.items col.c8{width:18mm}
+  .money .tax{width:20mm}
+  table.items{font-size:10.5pt}
+  .items th,.items td{border:1pt solid #000;height:8mm;padding:.9mm}
+  .items th{height:7mm;padding:1.1mm .9mm}
+  .items col.c1{width:8mm}.items col.c3{width:31mm}
+  .items col.c4{width:12mm}.items col.c5{width:12mm}.items col.c6{width:19mm}
+  .items col.c7{width:23mm}.items col.c8{width:17mm}
   tr,td,th{page-break-inside:avoid}
-  @page{size:A4 portrait;margin:13mm}
+  table{page-break-inside:avoid}
+  @page{size:A4 portrait;margin:12mm}
 }
 </style>
 </head>
@@ -254,7 +255,7 @@ table.items{width:100%;border-collapse:collapse;font-size:8.5px;table-layout:fix
 </div>
 <script>
 (function(){
-var K='shorui_app', KC='shorui_app_clients', ROWS=15;
+var K='shorui_app', KC='shorui_app_clients', ROWS=13;
 var OLD=['shorui_app_v4','shorui_app_v3','shorui_app_v2','shorui_app_v1','ojisan_mitumori_v14','ojisan_mitumori_v13','ojisan_mitumori_v12'];
 function $(id){return document.getElementById(id);}
 function yen(n){return '¥'+Math.round(n).toLocaleString('ja-JP');}
@@ -408,18 +409,27 @@ $('addItem').addEventListener('click',function(){
   renderItems();render();
 });
 function buildText(){
-  var c=calc();
+  var rate=num($('fRate').value);
+  var rows=state.items.filter(function(it){return it.name||num(it.price);});
+  var sub=0;
+  rows.forEach(function(it){ sub += num(it.qty)*num(it.price); });
+  var tax=Math.floor(sub*rate/100);
+  var grand=sub+tax;
   var L=['御'+state.kind+'書',era(state.date),'',(state.client||'')+'　'+state.honor,''];
   if(state.work)L.push('工事名：'+state.work);
   if(state.place)L.push('工事場所：'+state.place);
   L.push('下記の通り御'+state.kind+'申し上げます','');
-  L.push('税込合計金額 '+yen(c.grand)+' 円（税率'+state.rate+'％ 消費税額等 '+yen(c.tax)+'）','');
-  state.items.filter(function(it){return it.name||num(it.price);}).forEach(function(it,i){
+  rows.forEach(function(it,i){
     L.push((i+1)+'. '+it.name+(it.mat?' / '+it.mat:'')+'  '+it.qty+it.unit+' × '+yen(num(it.price))+' = '+yen(num(it.qty)*num(it.price))+(it.note?'（'+it.note+'）':''));
   });
-  L.push('小計 '+yen(c.sub),'');
+  L.push('');
+  L.push('小計　'+yen(sub));
+  L.push('消費税（'+rate+'％）　'+yen(tax));
+  L.push('合計　'+yen(grand));
+  L.push('');
+  L.push('税込合計金額　'+yen(grand)+' 円');
   var n=$('fFromName').value,a=$('fFromAddr').value,t=$('fFromTel').value,f=$('fFromFax').value,r=$('fFromReg').value;
-  if(n){L.push('---');L.push(n);if(a)L.push(a);if(t)L.push('電話 '+t);if(f)L.push('FAX '+f);if(r)L.push(r);}
+  if(n){L.push('');L.push('---');L.push(n);if(a)L.push(a);if(t)L.push('電話 '+t);if(f)L.push('FAX '+f);if(r)L.push(r);}
   return L.join('\n');
 }
 var msgT;
