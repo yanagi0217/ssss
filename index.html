@@ -7,11 +7,17 @@
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
-body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:18px;color:#111;background:#eef1f4;padding-bottom:120px}
-.bar{position:sticky;top:0;z-index:50;background:#14539a;color:#fff;font-size:20px;font-weight:bold;padding:14px;display:flex;justify-content:space-between;align-items:center}
+body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:18px;color:#111;background:#eef1f4;padding-bottom:40px}
+.bar{background:#14539a;color:#fff;font-size:20px;font-weight:bold;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
 .bar .save{font-size:15px;background:#0e8a4f;padding:6px 10px;border-radius:8px;opacity:0;transition:opacity .2s}
 .bar .save.on{opacity:1}
+.menu{position:sticky;top:0;z-index:90;display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-bottom:3px solid #14539a}
+.menu a{display:block;text-align:center;text-decoration:none;color:#14539a;font-size:14px;font-weight:bold;padding:10px 2px;line-height:1.3}
+.menu a span{display:block;font-size:22px}
+.menu a:active{background:#dce6f2}
 main{padding:14px}
+section{scroll-margin-top:64px;padding-bottom:26px;border-bottom:8px solid #d5dde5}
+section:last-child{border-bottom:none}
 h1.h{font-size:26px;margin:6px 0 4px}
 .lead{font-size:16px;color:#555;margin:0 0 14px;line-height:1.6}
 .step{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:bold;margin:22px 0 8px}
@@ -22,20 +28,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:#14539a}
 textarea{min-height:110px;line-height:1.5}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-button{font-family:inherit;font-size:19px;font-weight:bold;border:none;border-radius:12px;padding:16px;background:#14539a;color:#fff;cursor:pointer}
+button,.biglink{font-family:inherit;font-size:19px;font-weight:bold;border:none;border-radius:12px;padding:16px;background:#14539a;color:#fff;cursor:pointer;text-align:center;text-decoration:none;display:block}
 button.sub{background:#5a6a7a}
 button.warn{background:#b23c2e}
-button.line{background:#fff;color:#14539a;border:2px solid #14539a}
-button:active{transform:translateY(1px)}
+button.line,.biglink.line{background:#fff;color:#14539a;border:2px solid #14539a}
 .btn-wide{width:100%;margin-top:14px}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 .msg{font-size:16px;background:#fff8d8;border:2px solid #e0c341;border-radius:10px;padding:10px;margin:10px 0;line-height:1.5}
 .copybox{background:#fff;border:2px solid #14539a;border-radius:12px;padding:12px;margin:12px 0}
 .copybox textarea{font-size:15px;min-height:150px}
-.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:60;display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-top:3px solid #14539a}
-.tabbar button{background:#fff;color:#14539a;font-size:14px;padding:10px 2px;border-radius:0;line-height:1.4}
-.tabbar button.on{background:#14539a;color:#fff}
-.tabbar button span{display:block;font-size:22px}
 .card{background:#fff;border-radius:14px;padding:14px;margin:10px 0;border:2px solid #d5dde5}
 .card b{font-size:19px}
 .card p{margin:4px 0 0;font-size:15px;color:#555;line-height:1.5}
@@ -43,7 +44,6 @@ button:active{transform:translateY(1px)}
 .card .btns button{flex:1;font-size:16px;padding:12px}
 .tag{display:inline-block;font-size:13px;background:#e8eef5;color:#14539a;border-radius:6px;padding:3px 8px;margin-bottom:6px}
 .cnt{font-size:15px;color:#555;margin:8px 0}
-/* ===== プレビュー ===== */
 .preview{background:#fff;border-radius:8px;padding:10px;overflow:auto;border:2px solid #ccd5de}
 .sheet{background:#fff;font-size:11px;line-height:1.5;color:#000;padding:6px;min-height:200px}
 .sheet .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
@@ -74,14 +74,15 @@ button:active{transform:translateY(1px)}
 .sheet .note{border:1px solid #000;margin-top:6px;padding:4px 5px;font-size:9.5px;min-height:34px;white-space:pre-wrap}
 .sheet .bank{border:1px solid #000;border-top:none;padding:4px 5px;font-size:9.5px;white-space:pre-wrap}
 .sheet .lead-t{margin-top:6px;font-size:10px}
+.err{background:#ffe0dd;border:2px solid #b23c2e;color:#7a1a10;padding:10px;border-radius:10px;font-size:14px;margin:10px 0;white-space:pre-wrap}
 @media print{
   @page{size:A4 portrait;margin:11mm 9mm}
   body{background:#fff;padding:0;font-size:11pt}
-  .bar,.tabbar,.msg,.actions,.copybox,h1.h,.lead,.step,.card{display:none!important}
+  .bar,.menu,.msg,.actions,.copybox,h1.h,.lead,.step,.card,.err,.biglink{display:none!important}
   #v-in,#v-prop,#v-cli,#v-set{display:none!important}
-  #v-check{display:block!important;padding:0!important}
-  #v-check>*:not(.preview){display:none!important}
+  section{border:none;padding:0}
   main{padding:0}
+  #v-check>*:not(.preview){display:none!important}
   .preview{border:none;padding:0;border-radius:0;overflow:visible}
   .sheet{padding:0;font-size:11pt;line-height:1.5}
   .sheet .ttl{font-size:28pt;letter-spacing:6pt;border-bottom:4px double #000}
@@ -101,7 +102,6 @@ button:active{transform:translateY(1px)}
   .sheet .note,.sheet .bank{font-size:9.5pt}
   .sheet .lead-t{font-size:10pt}
   tr,td,th,table,.subject,.sum,.note{page-break-inside:avoid}
-  .sheet .own,.sheet .stamp{page-break-inside:avoid}
 }
 </style>
 </head>
@@ -109,8 +109,17 @@ button:active{transform:translateY(1px)}
 
 <div class="bar"><span>書類作成</span><span class="save" id="savemsg">保存しました</span></div>
 
+<div class="menu">
+  <a href="#v-in"><span>✎</span>入力</a>
+  <a href="#v-check"><span>☑</span>確認</a>
+  <a href="#v-prop"><span>⌂</span>物件</a>
+  <a href="#v-cli"><span>☺</span>相手</a>
+  <a href="#v-set"><span>⚙</span>設定</a>
+</div>
+
 <main>
-<!-- 入力 -->
+<div id="errbox"></div>
+
 <section id="v-in">
   <h1 class="h">書類をつくる</h1>
   <p class="lead">番号の順に入れてください。入れた内容は自動で保存されます。</p>
@@ -139,8 +148,8 @@ button:active{transform:translateY(1px)}
   <div class="step"><i>4</i>品名と金額</div>
   <div id="rows"></div>
   <div class="row2" style="margin-top:10px">
-    <button class="line" id="clearRows">明細を空にする</button>
-    <button class="sub" id="toProps">物件から入れる</button>
+    <button type="button" class="line" id="clearRows">明細を空にする</button>
+    <a class="biglink line" href="#v-prop" style="padding:16px;font-size:17px">物件から入れる</a>
   </div>
 
   <div class="step"><i>5</i>消費税と備考</div>
@@ -154,27 +163,26 @@ button:active{transform:translateY(1px)}
   <label>振込先</label>
   <textarea id="bank" placeholder="例: 〇〇銀行 〇〇支店 普通 1234567"></textarea>
 
-  <button class="btn-wide" id="goCheck">できあがりを見る</button>
+  <a class="biglink" href="#v-check" id="goCheck">できあがりを見る</a>
 </section>
 
-<!-- 確認 -->
-<section id="v-check" hidden>
+<section id="v-check">
   <h1 class="h">できあがり</h1>
   <p class="lead">印刷するか、コピーしてFAX・メール・LINEで送れます。</p>
   <div class="actions">
-    <button id="printBtn">印刷する</button>
-    <button class="sub" id="copyBtn">文をコピー</button>
+    <button type="button" id="printBtn">印刷する</button>
+    <button type="button" class="sub" id="copyBtn">文をコピー</button>
   </div>
   <div class="copybox">
     <label>コピー用(下の文を全選択してコピー)</label>
     <textarea id="copyText" readonly></textarea>
-    <button class="line btn-wide" id="copyBtn2">この文をコピーする</button>
+    <button type="button" class="line btn-wide" id="copyBtn2">この文をコピーする</button>
   </div>
   <div class="preview"><div class="sheet" id="sheet"></div></div>
+  <a class="biglink line btn-wide" href="#v-in">入力へ戻る</a>
 </section>
 
-<!-- 物件 -->
-<section id="v-prop" hidden>
+<section id="v-prop">
   <h1 class="h">物件リスト</h1>
   <p class="lead">物件をタップすると、宛先・工事名・場所が自動で入ります。</p>
   <input id="psearch" placeholder="物件名・住所で検索">
@@ -185,12 +193,12 @@ button:active{transform:translateY(1px)}
   <div class="step"><i>+</i>物件をまとめて足す</div>
   <p class="lead">1行に「物件名,住所,,会社名」の順で貼ってください。</p>
   <textarea id="pbulk" placeholder="〇〇マンション,江戸川区〇〇1-2-3,,株式会社〇〇"></textarea>
-  <button class="btn-wide" id="padd">まとめて登録する</button>
+  <button type="button" class="btn-wide" id="padd">まとめて登録する</button>
   <div class="msg" id="pmsg" hidden></div>
+  <a class="biglink line btn-wide" href="#v-in">入力へ戻る</a>
 </section>
 
-<!-- 相手 -->
-<section id="v-cli" hidden>
+<section id="v-cli">
   <h1 class="h">相手の記録</h1>
   <p class="lead">よく使う相手を保存しておけます。タップで呼び出せます。</p>
   <input id="c_co" placeholder="会社名">
@@ -198,12 +206,12 @@ button:active{transform:translateY(1px)}
     <input id="c_person" placeholder="担当者名">
     <select id="c_honor"><option>御中</option><option>様</option></select>
   </div>
-  <button class="btn-wide" id="cadd">この相手を保存する</button>
+  <button type="button" class="btn-wide" id="cadd">この相手を保存する</button>
   <div id="clist"></div>
+  <a class="biglink line btn-wide" href="#v-in">入力へ戻る</a>
 </section>
 
-<!-- 設定 -->
-<section id="v-set" hidden>
+<section id="v-set">
   <h1 class="h">自分の会社</h1>
   <p class="lead">一度入れれば、次からは自動で入ります。</p>
   <label>会社名</label>
@@ -224,19 +232,12 @@ button:active{transform:translateY(1px)}
   <textarea id="own_bank"></textarea>
 
   <div class="step"><i>!</i>データ</div>
-  <button class="line btn-wide" id="backup">全部コピー(バックアップ)</button>
-  <button class="warn btn-wide" id="reset">全部消す</button>
+  <button type="button" class="line btn-wide" id="backup">全部コピー(バックアップ)</button>
+  <button type="button" class="warn btn-wide" id="reset">全部消す</button>
   <div class="msg" id="smsg" hidden></div>
+  <a class="biglink line btn-wide" href="#v-in">入力へ戻る</a>
 </section>
 </main>
-
-<nav class="tabbar">
-  <button data-tab="in" class="on"><span>✎</span>入力</button>
-  <button data-tab="check"><span>☑</span>確認</button>
-  <button data-tab="prop"><span>⌂</span>物件</button>
-  <button data-tab="cli"><span>☺</span>相手</button>
-  <button data-tab="set"><span>⚙</span>設定</button>
-</nav>
 
 <script>
 var $=function(id){return document.getElementById(id)};
@@ -248,22 +249,13 @@ var TYPES={
   s:{title:'請求書',lead:'下記のとおり御請求申し上げます。'},
   d:{title:'納品書',lead:'下記のとおり納品いたしました。'}
 };
-
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function yen(n){n=Math.round(+n||0);return n.toLocaleString('ja-JP')}
 function today(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
-function era(s){
-  if(!s)return '';
-  var p=String(s).split('-');if(p.length<3)return s;
-  var y=+p[0],m=+p[1],d=+p[2];
-  if(y>=2019)return '令和'+(y-2018)+'年'+m+'月'+d+'日';
-  if(y>=1989)return '平成'+(y-1988)+'年'+m+'月'+d+'日';
-  return y+'年'+m+'月'+d+'日';
-}
+function era(s){if(!s)return '';var p=String(s).split('-');if(p.length<3)return s;var y=+p[0],m=+p[1],d=+p[2];if(y>=2019)return '令和'+(y-2018)+'年'+m+'月'+d+'日';if(y>=1989)return '平成'+(y-1988)+'年'+m+'月'+d+'日';return y+'年'+m+'月'+d+'日'}
 
-/* ===== 保存 ===== */
 var toastT;
-function toast(){var e=$('savemsg');e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(function(){e.classList.remove('on')},900)}
+function toast(){var e=$('savemsg');if(!e)return;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(function(){e.classList.remove('on')},900)}
 function ls(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 function lr(k){try{var s=localStorage.getItem(k);return s?JSON.parse(s):null}catch(e){return null}}
 
@@ -272,14 +264,16 @@ function readOwn(){
   var o=lr(KEY);
   if(!o){for(var i=0;i<OLD.length;i++){var t=lr(OLD[i]);if(t){o=t;break}}}
   if(o){for(var k in own){if(o[k]!=null)own[k]=String(o[k])}}
-  // 旧形式の入れ子対策
   if(o&&o.own){for(var k2 in own){if(o.own[k2]!=null)own[k2]=String(o.own[k2])}}
 }
-function saveOwn(){own.co=$('own_co').value;own.zip=$('own_zip').value;own.addr=$('own_addr').value;own.tel=$('own_tel').value;own.fax=$('own_fax').value;own.reg=$('own_reg').value;own.stamp=$('own_stamp').value;own.bank=$('own_bank').value;ls(KEY,own);toast()}
+function saveOwn(){
+  own.co=$('own_co').value;own.zip=$('own_zip').value;own.addr=$('own_addr').value;
+  own.tel=$('own_tel').value;own.fax=$('own_fax').value;own.reg=$('own_reg').value;
+  own.stamp=$('own_stamp').value;own.bank=$('own_bank').value;ls(KEY,own);toast();
+}
 
 var state={type:'m',no:'1',date:today(),to:{company:'',person:'',honor:'御中'},kubun:'',place:'',tax:10,note:'',bank:'',rows:[]};
 function blankRows(){var a=[];for(var i=0;i<ROWS;i++)a.push({kubun:'',name:'',qty:'',unit:'',price:'',note:''});return a}
-
 function load(){
   readOwn();
   var s=lr(KEY+'#doc');
@@ -292,91 +286,46 @@ function load(){
   while(state.rows.length<ROWS)state.rows.push({kubun:'',name:'',qty:'',unit:'',price:'',note:''});
 }
 function saveDoc(){ls(KEY+'#doc',state)}
+function sync(){saveDoc();if(state.to.company||state.kubun)toast()}
 
-/* ===== 入力欄 ===== */
 function renderInputs(){
   var h='';
   for(var i=0;i<ROWS;i++){
     var r=state.rows[i];
-    h+='<div class="card" data-i="'+i+'">'
-      +'<b>'+(i+1)+'行目</b>'
+    h+='<div class="card" data-i="'+i+'"><b>'+(i+1)+'行目</b>'
       +'<div class="row2" style="margin-top:8px"><input data-k="kubun" placeholder="工種" value="'+esc(r.kubun)+'"><input data-k="unit" placeholder="単位" value="'+esc(r.unit)+'"></div>'
       +'<input data-k="name" placeholder="品名・工事内容" value="'+esc(r.name)+'" style="margin-top:8px">'
-      +'<div class="row3" style="margin-top:8px"><input data-k="qty" type="number" inputmode="decimal" placeholder="数量" value="'+esc(r.qty)+'"><input data-k="price" type="number" inputmode="numeric" placeholder="単価" value="'+esc(r.price)+'"><input data-k="note" placeholder="備考" value="'+esc(r.note)+'"></div>'
-      +'</div>';
+      +'<div class="row3" style="margin-top:8px"><input data-k="qty" type="number" inputmode="decimal" placeholder="数量" value="'+esc(r.qty)+'"><input data-k="price" type="number" inputmode="numeric" placeholder="単価" value="'+esc(r.price)+'"><input data-k="note" placeholder="備考" value="'+esc(r.note)+'"></div></div>';
   }
   $('rows').innerHTML=h;
 }
 
-function bindFields(){
-  $('type').onchange=function(){state.type=this.value;sync();renderSheet()};
-  $('to_co').oninput=function(){state.to.company=this.value;sync()};
-  $('to_person').oninput=function(){state.to.person=this.value;sync()};
-  $('to_honor').onchange=function(){state.to.honor=this.value;sync();renderSheet()};
-  $('kubun').oninput=function(){state.kubun=this.value;sync()};
-  $('place').oninput=function(){state.place=this.value;sync()};
-  $('tax').onchange=function(){state.tax=+this.value;sync();renderSheet()};
-  $('note').oninput=function(){state.note=this.value;sync()};
-  $('bank').oninput=function(){state.bank=this.value;sync()};
-  $('rows').addEventListener('input',function(e){
-    var k=e.target.getAttribute('data-k');if(!k)return;
-    var card=e.target.closest('.card');var i=+card.getAttribute('data-i');
-    state.rows[i][k]=e.target.value;sync();renderSheet();
-  });
-  $('clearRows').onclick=function(){if(confirm('明細を空にしますか?')){state.rows=blankRows();renderInputs();sync();renderSheet()}};
-  $('toProps').onclick=function(){showTab('prop')};
-  $('goCheck').onclick=function(){renderSheet();showTab('check')};
-  $('printBtn').onclick=function(){renderSheet();setTimeout(function(){window.print()},250)};
-  $('copyBtn').onclick=function(){doCopy()};
-  $('copyBtn2').onclick=function(){doCopy()};
-  window.addEventListener('pagehide',function(){saveOwn();saveDoc()});
-}
-
-function sync(){
-  saveDoc();
-  var t=state.to.company;
-  if(t||state.kubun)toast();
-}
-
-/* ===== 計算 ===== */
 function calc(){
-  var sub=0;
-  state.rows.forEach(function(r){sub+=(+r.qty||0)*(+r.price||0)});
-  var tax=Math.floor(sub*state.tax/100);
-  return {sub:sub,tax:tax,total:sub+tax};
+  var sub=0;state.rows.forEach(function(r){sub+=(+r.qty||0)*(+r.price||0)});
+  var tax=Math.floor(sub*state.tax/100);return {sub:sub,tax:tax,total:sub+tax};
 }
+function stampText(){var t=(own.stamp||own.co||'').trim();return esc(t.slice(0,6))}
 
-/* ===== プレビュー ===== */
-function stampText(){
-  var t=(own.stamp||own.co||'').trim();
-  return esc(t.slice(0,6));
-}
 function renderSheet(){
-  var s=state,c=calc(),T=TYPES[s.type]||TYPES.m;
-  var h='';
-  h+='<div class="top"><div><div class="ttl">'+T.title+'</div></div>'
-   +'<div class="meta">No. '+esc(s.no)+'<br>'+esc(era(s.date))+'</div></div>';
+  var s=state,c=calc(),T=TYPES[s.type]||TYPES.m,h='';
+  h+='<div class="top"><div><div class="ttl">'+T.title+'</div></div><div class="meta">No. '+esc(s.no)+'<br>'+esc(era(s.date))+'</div></div>';
   h+='<div style="margin-top:10px"><div class="to">'+esc(s.to.company||'　')+'　'+esc(s.to.person)+' <span class="honor">'+esc(s.to.honor)+'</span></div></div>';
   h+='<div class="own"><div>'+(own.zip?'〒'+esc(own.zip)+'<br>':'')+esc(own.co)+'<br>'+esc(own.addr)+(own.tel?'<br>TEL '+esc(own.tel):'')+(own.fax?' FAX '+esc(own.fax):'')+(own.reg?'<br>登録番号 '+esc(own.reg):'')+'</div><div class="stamp">'+(stampText()||'角印')+'</div></div>';
   h+='<div class="lead-t">'+esc(T.lead)+'</div>';
   h+='<div class="subject"><div>工事名: '+esc(s.kubun)+'</div><div>場所: '+esc(s.place)+'</div></div>';
   h+='<table><thead><tr><th>No</th><th>工種</th><th>品名・工事内容</th><th>数量</th><th>単位</th><th>単価</th><th>金額</th><th>備考</th></tr></thead><tbody>';
   for(var i=0;i<ROWS;i++){
-    var r=s.rows[i]||{};
-    var a=(+r.qty||0)*(+r.price||0);
+    var r=s.rows[i]||{},a=(+r.qty||0)*(+r.price||0);
     h+='<tr><td class="n">'+(i+1)+'</td><td class="k">'+esc(r.kubun)+'</td><td class="nm">'+esc(r.name)+'</td><td class="q">'+esc(r.qty)+'</td><td class="u">'+esc(r.unit)+'</td><td class="p">'+(r.price?yen(r.price):'')+'</td><td class="a">'+(a?yen(a):'')+'</td><td class="b">'+esc(r.note)+'</td></tr>';
   }
   h+='</tbody></table>';
-  h+='<div class="sum"><table><tr><td class="l">小計</td><td class="v">'+yen(c.sub)+'</td></tr>'
-   +'<tr><td class="l">消費税('+s.tax+'%)</td><td class="v">'+yen(c.tax)+'</td></tr>'
-   +'<tr class="g"><td class="l">合計</td><td class="v">'+yen(c.total)+'</td></tr></table></div>';
+  h+='<div class="sum"><table><tr><td class="l">小計</td><td class="v">'+yen(c.sub)+'</td></tr><tr><td class="l">消費税('+s.tax+'%)</td><td class="v">'+yen(c.tax)+'</td></tr><tr class="g"><td class="l">合計</td><td class="v">'+yen(c.total)+'</td></tr></table></div>';
   h+='<div class="note">'+esc(s.note).replace(/\n/g,'<br>')+'</div>';
   h+='<div class="bank">'+esc(s.bank||own.bank).replace(/\n/g,'<br>')+'</div>';
   $('sheet').innerHTML=h;
   $('copyText').value=buildText();
 }
 
-/* ===== コピー文 ===== */
 function buildText(){
   var s=state,c=calc(),T=TYPES[s.type]||TYPES.m,L=[];
   L.push(T.title);L.push('No.'+s.no+'　'+era(s.date));L.push('');
@@ -388,23 +337,20 @@ function buildText(){
       L.push((i+1)+'. '+(r.kubun?r.kubun+' ':'')+r.name+'　'+r.qty+r.unit+' × '+yen(r.price)+' = '+yen(a)+(r.note?'　('+r.note+')':''));
     }
   });
-  L.push('---');
-  L.push('小計: '+yen(c.sub));L.push('消費税('+s.tax+'%): '+yen(c.tax));L.push('合計: '+yen(c.total));
+  L.push('---');L.push('小計: '+yen(c.sub));L.push('消費税('+s.tax+'%): '+yen(c.tax));L.push('合計: '+yen(c.total));
   if(s.note)L.push('備考: '+s.note);
   var b=s.bank||own.bank;if(b)L.push('振込先: '+b);
-  if(s.kubun)L.push('');if(s.kubun)L.push('工事名: '+s.kubun);if(s.place)L.push('場所: '+s.place);
+  if(s.kubun){L.push('');L.push('工事名: '+s.kubun)}
+  if(s.place)L.push('場所: '+s.place);
   L.push('');L.push(own.co);if(own.addr)L.push(own.addr);if(own.tel)L.push('TEL '+own.tel);
   return L.join('\n');
 }
 function doCopy(){
   var t=$('copyText').value;
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(t).then(function(){toast()},function(){fallback()});
-  }else fallback();
-  function fallback(){var ta=$('copyText');ta.removeAttribute('readonly');ta.select();document.execCommand('copy');ta.setAttribute('readonly','readonly');toast()}
+  function fallback(){var ta=$('copyText');ta.removeAttribute('readonly');ta.select();try{document.execCommand('copy')}catch(e){}ta.setAttribute('readonly','readonly');toast()}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast()},fallback)}else fallback();
 }
 
-/* ===== 物件 ===== */
 var SEED="アーバングリーハイツ,東京都江戸川区瑞江2-30-1,,株式会社広島興産\nSAビル,東京都江戸川区南篠崎町2-7-6,,株式会社広島興産\nSフラット,東京都江戸川区一之江4-9-13,,株式会社広島興産\nあひる荘,東京都江戸川区江戸川4-22-5,,株式会社広島興産\nコーポリリック,東京都江戸川区西瑞江4-17-27,,株式会社広島興産\nコーポリリック行徳A棟,千葉県市川市福栄1-8-19,,株式会社広島興産\nコーポリリック行徳B棟,千葉県市川市福栄1-8-20,,株式会社広島興産\nコーラル,東京都江戸川区一之江3-22-7,,株式会社広島興産\nシャルメ,東京都江戸川区一之江3-22-8,,株式会社広島興産\nロッソ,東京都江戸川区一之江3-22-17,,株式会社広島興産\n鈴木コーポ,東京都江戸川区江戸川4-23-41,,株式会社広島興産\nすずらんマンション,東京都江戸川区東小岩5-14-10,,株式会社広島興産\n第1メゾンシャンブル,東京都江戸川区江戸川3-4-13,,株式会社広島興産\n第2メゾンシャンブル,東京都江戸川区西瑞江3-7-11,,株式会社広島興産\n第3メゾンシャンブル,東京都江戸川区江戸川3-4-13,,株式会社広島興産\n高橋ビル,東京都江戸川区南篠崎町4-22-16,,株式会社広島興産\n第3山本ビル,東京都江戸川区篠崎町7-7-7,,株式会社広島興産\n第2SAビル,東京都江戸川区一之江3-1-11,,株式会社広島興産\nドエル,東京都江戸川区西瑞江3-5-10,,株式会社広島興産\nドムスA,東京都江戸川区西瑞江3-11-3,,株式会社広島興産\nメルベーユ,東京都江戸川区西瑞江3-11-2,,株式会社広島興産\nハイブリッジハイツ,東京都江戸川区瑞江1-24-5,,株式会社広島興産\nビラパレス浦安,千葉県浦安市猫実1-1-14,,株式会社広島興産\nコフレット,千葉県浦安市堀江5-15-9,,株式会社広島興産\nビラパレス上篠,東京都江戸川区上篠崎3-11-8,,株式会社広島興産\nビラパレスみずえ,東京都江戸川区西瑞江3-15-19,,株式会社広島興産\nマノワール,東京都江戸川区一之江4-6-17,,株式会社広島興産\n山本コーポ,東京都江戸川区北葛西3-8-3,,株式会社広島興産\nレアルゼ,東京都江戸川区船堀6-3-11,,株式会社広島興産\nPIER60,東京都江戸川区鹿骨4-20-19,,株式会社広島興産\nPIER46,東京都江戸川区鹿骨4-24-4,,株式会社広島興産\nPIER61,東京都江戸川区鹿骨4-20-19,,株式会社広島興産\nエムハイム,東京都江戸川区鹿骨5-7-15,,株式会社広島興産\n清和荘,東京都江戸川区鹿骨5-38-17,,株式会社広島興産\nリート,東京都江戸川区鹿骨4-32-4,,株式会社広島興産\nゴールドフォレスト,東京都江戸川区鹿骨2-28-8,,株式会社広島興産\nコーポコスモ,葛飾区西新小岩4-1-18,,トーケン産業㈱\n朝日マンション1階店舗,江戸川区南小岩8-16-8,,トーケン産業㈱\nトーケン貸家,江戸川区本一色3-11-29,,トーケン産業㈱\n第5スターコーポ,江戸川区松島4-24-20,,コーセー不動産㈱\n第6スターコーポ,江戸川区南小岩5-16-19,,コーセー不動産㈱\n第7スターコーポ,江戸川区本一色3-21-2,,コーセー不動産㈱\n第8スターコーポ,葛飾区西新小岩4-1-18,,コーセー不動産㈱\n第3コーセーマンション,葛飾区堀切2-56-4,,コーセー不動産㈱\n第1スターコーポ,江戸川区松島4-11-14,,管理物件\n第2スターコーポ,江戸川区松島4-11-14,,管理物件\n第3スターコーポ,葛飾区新小岩3-14-24,,管理物件\n第5コーセーマンション,江戸川区船堀6-1-12,,管理物件\n(名称不鮮明),葛飾区新小岩4-10-12,,管理物件\nベルメゾンコパ,葛飾区新小岩1-54-9,,管理物件\nメゾンブランシュカワノ,江戸川区松島1-14-1,,管理物件\nミドルコーポ,江戸川区中央2-14-13,,管理物件\n新小岩スカイマンション,葛飾区新小岩1-56-10,,管理物件\nパシフィック新小岩1104号,葛飾区新小岩2-7-15,,管理物件\n二上荘,葛飾区新小岩4-10-12,,管理物件\nタケイマンション304号,江戸川区本一色1-28-7,,管理物件\n第3ライオンズMC608号,江戸川区本一色1-24-16,,管理物件\n大和ハウス,葛飾区新小岩1-17-12,,管理物件\nコーポ平野,江戸川区中央4-15-20,,管理物件\nクサノハイツ,葛飾区新小岩2-20-16,,管理物件\nフレッシュハイツ,江戸川区本一色1-3-19,,管理物件\n浦野貸家,江戸川区松島3-33-9,,貸家\n国分貸家,江戸川区本一色3-11-26,,貸家\n高橋貸家,江戸川区本一色3-27-9,,貸家\n秋元貸家,江戸川区松島1-8-16,,貸家\n高桑貸家,江戸川区鹿骨1-50-12,,貸家\n小笠原貸家,葛飾区新小岩3-27-12,,貸家\n松崎貸家,葛飾区新小岩3-23-11,,貸家\n早坂貸家,葛飾区東新小岩5-19-12,,貸家\n高橋貸家,葛飾区新小岩3-16-4,,貸家\n小畑貸家,江戸川区本一色2-8-12,,貸家\n早坂,江戸川区東新小岩1-18-14,,貸家\n高津第1,江戸川区本一色1-21-1,,管理駐車場\n高津第2,江戸川区本一色1-26,,管理駐車場\n栄荘前,江戸川区本一色1-21-19,,管理駐車場\n(有)高津産業,江戸川区本一色1-5-28,,管理駐車場\n越塚第2,江戸川区本一色3-18-18,,管理駐車場\n越塚第3,江戸川区本一色3-11-28,,管理駐車場\n佐藤第1,葛飾区新小岩2-9-14,,管理駐車場\n岩下,葛飾区新小岩3-6-14,,管理駐車場\nコンフォート,江戸川区本一色3-27-4,,管理駐車場\n佐藤はる,江戸川区興宮3,,管理駐車場\n上篠崎,江戸川区上篠崎3-15-3,,管理駐車場\n大浦,葛飾区新小岩3-24-3,,管理駐車場\n中央4丁目,江戸川区中央4-2-24,,管理駐車場\n第7,江戸川区本一色3-21-2,,管理駐車場\n第5,江戸川区松島4-24-22,,管理駐車場\n桃井,葛飾区新小岩4-1-1,,管理駐車場\nパークテラス,葛飾区新小岩3-20-10,,管理駐車場\n伊波駐車,葛飾区新小岩4-1-1,,管理駐車場\nメゾンドIN,江戸川区本一色3-11-34,,貸倉庫";
 
 var props=[];
@@ -434,27 +380,26 @@ function renderProps(){
   list.forEach(function(p){
     var i=props.indexOf(p);
     h+='<div class="card"><span class="tag">'+esc(p.co)+'</span><b>'+esc(p.name)+'</b><p>'+esc(p.addr)+'</p>'
-      +'<div class="btns"><button data-use="'+i+'">この物件を使う</button><button class="warn" data-del="'+i+'">削除</button></div></div>';
+      +'<div class="btns"><button type="button" data-use="'+i+'">この物件を使う</button><button type="button" class="warn" data-del="'+i+'">削除</button></div></div>';
   });
   $('plist').innerHTML=h;
 }
 function renderCoOptions(){
-  var cos=[];
-  props.forEach(function(p){if(cos.indexOf(p.co)<0)cos.push(p.co)});
+  var cos=[];props.forEach(function(p){if(cos.indexOf(p.co)<0)cos.push(p.co)});
   var cur=$('pco').value;
   $('pco').innerHTML='<option value="">すべての会社</option>'+cos.map(function(c){return '<option>'+esc(c)+'</option>'}).join('');
   if(cos.indexOf(cur)>=0)$('pco').value=cur;
 }
 function useProp(i){
   var p=props[i];if(!p)return;
-  state.to.company=p.co==='（会社なし）'?'':p.co;
+  state.to.company=(p.co==='（会社なし）')?'':p.co;
   state.kubun=p.name+' 電気工事';
   state.place=p.addr;
   $('to_co').value=state.to.company;$('kubun').value=state.kubun;$('place').value=state.place;
-  saveDoc();renderSheet();showTab('in');
+  saveDoc();renderSheet();
+  location.hash='#v-in';
 }
 
-/* ===== 相手 ===== */
 var clients=[];
 function initClients(){clients=lr(KCLI)||[]}
 function renderClients(){
@@ -462,70 +407,66 @@ function renderClients(){
   var h='';
   clients.forEach(function(c,i){
     h+='<div class="card"><b>'+esc(c.co)+'</b><p>'+esc(c.person||'')+'　'+esc(c.honor||'')+'</p>'
-      +'<div class="btns"><button data-cuse="'+i+'">この相手を使う</button><button class="warn" data-cdel="'+i+'">削除</button></div></div>';
+      +'<div class="btns"><button type="button" data-cuse="'+i+'">この相手を使う</button><button type="button" class="warn" data-cdel="'+i+'">削除</button></div></div>';
   });
   $('clist').innerHTML=h;
 }
 
-/* ===== タブ ===== */
-var TABS=['in','check','prop','cli','set'];
-function showTab(t){
-  TABS.forEach(function(k){$('v-'+k).hidden=(k!==t)});
-  document.querySelectorAll('.tabbar button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-tab')===t)});
-  if(t==='check')renderSheet();
-  if(t==='prop'){renderCoOptions();renderProps()}
-  if(t==='cli')renderClients();
-  window.scrollTo(0,0);
-}
-
-/* ===== 起動 ===== */
 function boot(){
   load();
   renderInputs();
-  bindFields();
-  $('type').value=state.type;
-  $('to_co').value=state.to.company;
-  $('to_person').value=state.to.person;
-  $('to_honor').value=state.to.honor;
-  $('kubun').value=state.kubun;
-  $('place').value=state.place;
-  $('tax').value=String(state.tax);
-  $('note').value=state.note;
-  $('bank').value=state.bank;
+  $('type').value=state.type;$('to_co').value=state.to.company;$('to_person').value=state.to.person;
+  $('to_honor').value=state.to.honor;$('kubun').value=state.kubun;$('place').value=state.place;
+  $('tax').value=String(state.tax);$('note').value=state.note;$('bank').value=state.bank;
   $('own_co').value=own.co;$('own_zip').value=own.zip;$('own_addr').value=own.addr;
   $('own_tel').value=own.tel;$('own_fax').value=own.fax;$('own_reg').value=own.reg;
   $('own_stamp').value=own.stamp;$('own_bank').value=own.bank;
+
+  $('type').onchange=function(){state.type=this.value;sync();renderSheet()};
+  $('to_co').oninput=function(){state.to.company=this.value;sync()};
+  $('to_person').oninput=function(){state.to.person=this.value;sync()};
+  $('to_honor').onchange=function(){state.to.honor=this.value;sync();renderSheet()};
+  $('kubun').oninput=function(){state.kubun=this.value;sync()};
+  $('place').oninput=function(){state.place=this.value;sync()};
+  $('tax').onchange=function(){state.tax=+this.value;sync();renderSheet()};
+  $('note').oninput=function(){state.note=this.value;sync()};
+  $('bank').oninput=function(){state.bank=this.value;sync()};
+  $('rows').addEventListener('input',function(e){
+    var k=e.target.getAttribute('data-k');if(!k)return;
+    var i=+e.target.parentNode.parentNode.getAttribute('data-i');
+    state.rows[i][k]=e.target.value;sync();renderSheet();
+  });
+  $('clearRows').onclick=function(){if(confirm('明細を空にしますか?')){state.rows=blankRows();renderInputs();sync();renderSheet()}};
+  $('goCheck').onclick=function(){renderSheet()};
+  $('printBtn').onclick=function(){renderSheet();setTimeout(function(){window.print()},250)};
+  $('copyBtn').onclick=doCopy;$('copyBtn2').onclick=doCopy;
 
   ['own_co','own_zip','own_addr','own_tel','own_fax','own_reg','own_stamp','own_bank'].forEach(function(id){
     $(id).addEventListener('input',saveOwn);
     $(id).addEventListener('blur',function(){saveOwn();renderSheet()});
   });
+  window.addEventListener('pagehide',function(){saveOwn();saveDoc()});
 
-  initProps();initClients();
-
-  document.querySelectorAll('.tabbar button').forEach(function(b){
-    b.onclick=function(){showTab(b.getAttribute('data-tab'))};
-  });
+  initProps();initClients();renderCoOptions();renderProps();renderClients();
 
   $('psearch').oninput=renderProps;
   $('pco').onchange=renderProps;
   $('plist').addEventListener('click',function(e){
     var u=e.target.getAttribute('data-use'),d=e.target.getAttribute('data-del');
     if(u!=null)useProp(+u);
-    if(d!=null){if(confirm('この物件を削除しますか?')){props.splice(+d,1);saveProps();renderCoOptions();renderProps()}}
+    if(d!=null&&confirm('この物件を削除しますか?')){props.splice(+d,1);saveProps();renderCoOptions();renderProps()}
   });
   $('padd').onclick=function(){
     var lines=$('pbulk').value.split('\n'),n=0;
     lines.forEach(function(l){
       var o=parseLine(l);if(!o)return;
-      var dup=props.some(function(p){return p.name===o.name&&p.addr===o.addr});
-      if(dup)return;
+      if(props.some(function(p){return p.name===o.name&&p.addr===o.addr}))return;
       props.push(o);n++;
     });
     if(n){saveProps();$('pbulk').value='';renderCoOptions();renderProps()}
     $('pmsg').hidden=false;
     $('pmsg').textContent=n?n+'件を登録しました。':'新しい物件はありませんでした(重複か空欄)。';
-  });
+  };
 
   $('cadd').onclick=function(){
     var co=$('c_co').value.trim();if(!co){alert('会社名を入れてください');return}
@@ -538,9 +479,9 @@ function boot(){
       var c=clients[+u];if(!c)return;
       state.to.company=c.co;state.to.person=c.person;state.to.honor=c.honor||'御中';
       $('to_co').value=c.co;$('to_person').value=c.person;$('to_honor').value=state.to.honor;
-      saveDoc();renderSheet();showTab('in');
+      saveDoc();renderSheet();location.hash='#v-in';
     }
-    if(d!=null){if(confirm('削除しますか?')){clients.splice(+d,1);ls(KCLI,clients);renderClients()}}
+    if(d!=null&&confirm('削除しますか?')){clients.splice(+d,1);ls(KCLI,clients);renderClients()}
   });
 
   $('backup').onclick=function(){
@@ -552,14 +493,13 @@ function boot(){
   };
   $('reset').onclick=function(){
     if(!confirm('会社情報・物件・相手を全部消します。よろしいですか?'))return;
-    [KEY,KEY+'#doc',KCLI,KPROP].forEach(function(k){localStorage.removeItem(k)});
+    [KEY,KEY+'#doc',KCLI,KPROP].forEach(function(k){try{localStorage.removeItem(k)}catch(e){}});
     location.reload();
   };
 
   renderSheet();
-  showTab('in');
 }
-boot();
+try{boot()}catch(err){$('errbox').innerHTML='<div class="err">読み込みでエラーが出ました:\n'+err.message+'</div>'}
 </script>
 </body>
 </html>
